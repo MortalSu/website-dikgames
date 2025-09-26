@@ -3,26 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Details - GameHub</title>
-    <meta name="description"
-        content="View details for games on GameHub, including developer, version, and screenshots.">
-    <meta name="keywords" content="games, gaming platform, video games, GameHub, game details">
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="GameHub Team">
-    <meta property="og:title" content="Game Details - GameHub">
-    <meta property="og:description" content="Explore detailed information about your favorite games on GameHub.">
-    <meta property="og:image"
-        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
-    <meta property="og:url" content="https://gamehub.example.com/detail.html">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://gamehub.example.com/detail.html">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
         crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
@@ -33,7 +18,6 @@
             --border-color: rgba(255, 255, 255, 0.4);
             --text-white: #ffffff;
             --text-muted: #cccccc;
-            --cloud-glow: rgba(255, 255, 255, 0.2);
             --transition: all 0.3s ease;
         }
 
@@ -41,7 +25,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', Arial, sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
@@ -96,9 +80,7 @@
             background-color: var(--card-bg);
             color: var(--text-white);
             font-size: 0.9rem;
-            outline: none;
             width: 100%;
-            transition: var(--transition);
         }
 
         .search-bar input:focus {
@@ -117,20 +99,11 @@
             color: var(--text-white);
             cursor: pointer;
             transition: var(--transition);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
-            font-size: 0.9rem;
         }
 
         .search-bar button:hover:not(:disabled) {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
-        }
-
-        .search-bar button i {
-            color: var(--text-white);
         }
 
         main {
@@ -187,7 +160,6 @@
             max-width: 400px;
             height: auto;
             object-fit: cover;
-            display: block;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             margin: 0 auto 20px;
@@ -223,7 +195,6 @@
             color: var(--text-white);
             font-size: 14px;
             text-align: center;
-            transition: var(--transition);
         }
 
         .math-challenge button {
@@ -234,15 +205,11 @@
             border-radius: 5px;
             cursor: pointer;
             transition: var(--transition);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
         }
 
         .math-challenge button:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         .download-button {
@@ -255,9 +222,6 @@
             font-weight: bold;
             text-align: center;
             transition: var(--transition);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
             pointer-events: none;
             opacity: 0.6;
         }
@@ -265,13 +229,11 @@
         .download-button.active {
             pointer-events: auto;
             opacity: 1;
-            aria-disabled: false;
         }
 
         .download-button:hover.active {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         .tag-button {
@@ -283,16 +245,11 @@
             font-size: 0.9rem;
             transition: var(--transition);
             text-transform: capitalize;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
         }
 
         .tag-button:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         .gallery {
@@ -302,7 +259,6 @@
             gap: 15px;
             width: 100%;
             max-width: 600px;
-            justify-content: center;
         }
 
         .gallery h3 {
@@ -319,7 +275,6 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             transition: var(--transition);
-            loading: lazy;
             cursor: pointer;
         }
 
@@ -334,13 +289,6 @@
             font-size: 18px;
         }
 
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1rem;
-            padding: 2rem;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -352,13 +300,10 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            overflow: auto;
-            touch-action: none;
         }
 
         .modal-image-container {
             position: relative;
-            overflow: hidden;
             max-width: 90vw;
             max-height: 90vh;
             display: flex;
@@ -378,9 +323,6 @@
             height: auto;
             transform-origin: 0 0;
             transition: transform 0.2s ease;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
         }
 
         .modal-close {
@@ -398,15 +340,11 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
         }
 
         .modal-close:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         .links-container {
@@ -429,16 +367,11 @@
             border-radius: 20px;
             font-size: 0.9rem;
             transition: var(--transition);
-            text-align: center;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 0 10px var(--cloud-glow);
         }
 
         .link-button:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         footer {
@@ -447,11 +380,6 @@
             text-align: center;
             border-top: 1px solid var(--border-color);
             margin-top: 2rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .footer-content p {
@@ -494,7 +422,6 @@
 
             .game-thumbnail {
                 max-width: 300px;
-                height: auto;
             }
 
             .modal-image-container {
@@ -526,10 +453,6 @@
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
             }
 
-            #game-details {
-                margin: 15px 10px;
-            }
-
             .game-content {
                 padding: 20px;
             }
@@ -542,7 +465,6 @@
 
             .game-thumbnail {
                 max-width: 100%;
-                height: auto;
             }
 
             .gallery {
@@ -564,7 +486,6 @@
                 right: 10px;
                 width: 30px;
                 height: 30px;
-                font-size: 0.9rem;
             }
 
             .link-button {
@@ -586,11 +507,7 @@
     <main>
         <section class="game-details" aria-labelledby="game-details">
             <h2 class="section-title" id="game-details">Game Details</h2>
-            <div id="game-details-content">
-                <div class="game-content">
-                    <p class="loading">Loading game details...</p>
-                </div>
-            </div>
+            <div id="game-details-content"></div>
         </section>
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
@@ -622,70 +539,23 @@
             </div>
         </div>
     </footer>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        "name": "Game Details - GameHub",
-        "url": "https://gamehub.example.com/detail.html",
-        "description": "Detailed information about a specific game on GameHub."
-    }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
     <script>
-        // Static fallback data
-        const fallbackGames = [
-            {
-                title: "Sample Game",
-                developer: "Sample Studio",
-                version: "1.0",
-                status: "Released",
-                language: "English",
-                description: "A sample game for testing purposes.",
-                download: "#",
-                tags: ["action", "adventure"],
-                thumbnail: "https://via.placeholder.com/400x200?text=Sample+Game",
-                images: ["https://via.placeholder.com/200x150?text=Screenshot+1"]
-            }
-        ];
-
-        // Precompiled static schema (avoiding eval)
-        const staticSchema = {
-            nested: {
-                gamehub: {
-                    nested: {
-                        Game: {
-                            fields: {
-                                1: { name: "title", type: "string" },
-                                2: { name: "developer", type: "string" },
-                                3: { name: "version", type: "string" },
-                                4: { name: "status", type: "string" },
-                                5: { name: "tags", rule: "repeated", type: "string" },
-                                6: { name: "description", type: "string" },
-                                7: { name: "download", type: "string" },
-                                8: { name: "language", type: "string" },
-                                9: { name: "images", rule: "repeated", type: "string" },
-                                10: { name: "thumbnail", type: "string" }
-                            }
-                        },
-                        GameList: {
-                            fields: {
-                                1: { name: "games", rule: "repeated", type: "gamehub.Game" }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        // Generate random math question
         function generateMathQuestion() {
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
             return { question: `${num1} + ${num2} = ?`, answer: num1 + num2 };
         }
 
-        // Search handler
+        function preloadImage(url, fallback) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(url);
+                img.onerror = () => resolve(fallback);
+                img.src = url;
+            });
+        }
+
         function handleSearch() {
             const query = document.getElementById("search-input").value.trim();
             if (query) {
@@ -693,35 +563,11 @@
             }
         }
 
-        // Show modal with large image
-        function showModal(imageSrc) {
-            const modal = document.getElementById("image-modal");
-            const modalImage = document.getElementById("modal-image");
-            modalImage.src = imageSrc;
-            modalImage.alt = "Large screenshot";
-            modal.style.display = "flex";
-            modalImage.style.transform = "scale(1) translate(0px, 0px)";
-            initializeModalZoom();
-        }
-
-        // Close modal
-        function closeModal() {
-            const modal = document.getElementById("image-modal");
-            modal.style.display = "none";
-        }
-
-        // Modal zoom and pan functionality
         function initializeModalZoom() {
+            const modal = document.getElementById("image-modal");
             const modalImage = document.getElementById("modal-image");
             const modalImageContainer = document.getElementById("modal-image-container");
-
-            let scale = 1;
-            let translateX = 0;
-            let translateY = 0;
-            let isDragging = false;
-            let startX = 0;
-            let startY = 0;
-            let pinchStartDistance = 0;
+            let scale = 1, translateX = 0, translateY = 0, isDragging = false, startX = 0, startY = 0, pinchStartDistance = 0;
 
             function updateTransform() {
                 modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
@@ -802,16 +648,22 @@
             });
         }
 
-        async function loadDetails() {
-            // Immediate placeholder
-            document.getElementById("game-details-content").innerHTML = `
-                <div class="game-content">
-                    <p class="loading">Loading game details...</p>
-                </div>
-            `;
+        function showModal(imageSrc) {
+            const modal = document.getElementById("image-modal");
+            const modalImage = document.getElementById("modal-image");
+            modalImage.src = imageSrc;
+            modalImage.alt = "Large screenshot";
+            modal.style.display = "flex";
+            modalImage.style.transform = "scale(1) translate(0px, 0px)";
+        }
 
+        function closeModal() {
+            document.getElementById("image-modal").style.display = "none";
+        }
+
+        async function loadDetails() {
             const params = new URLSearchParams(window.location.search);
-            const id = parseInt(params.get("id"), 10);
+            const id = params.get("id");
             const page = params.get("page") || "1";
             const query = params.get("query") || "";
             const tag = params.get("tag") || "";
@@ -826,7 +678,7 @@
                 logoLink.href = `index.html?page=${page}`;
             }
 
-            if (isNaN(id) || id < 0) {
+            if (id === null || isNaN(id) || id < 0) {
                 document.getElementById("game-details-content").innerHTML = `
                     <div class="game-content">
                         <p class="error-message">Invalid game ID: ${id}</p>
@@ -835,219 +687,129 @@
                 return;
             }
 
-            // Check localStorage cache
-            let games = null;
-            const cachedGames = localStorage.getItem("games");
-            if (cachedGames) {
-                try {
-                    games = JSON.parse(cachedGames);
-                } catch (e) {
-                    console.error("Failed to parse cached games:", e);
+            const gameId = parseInt(id, 10);
+            try {
+                const protoContent = `
+                    syntax = "proto3";
+                    package gamehub;
+                    message Game {
+                        string title = 1;
+                        string developer = 2;
+                        string version = 3;
+                        string status = 4;
+                        repeated string tags = 5;
+                        string description = 6;
+                        string download = 7;
+                        string language = 8;
+                        repeated string images = 9;
+                        string thumbnail = 10;
+                    }
+                    message GameList {
+                        repeated Game games = 1;
+                    }
+                `;
+                const root = await protobuf.parse(protoContent, { keepCase: true }).root;
+                const GameListMessage = root.lookupType("gamehub.GameList");
+                const response = await fetch('public/data/games.pb');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
                 }
-            }
+                const protoBinaryData = new Uint8Array(await response.arrayBuffer());
+                const message = GameListMessage.decode(protoBinaryData);
+                const games = message.games;
 
-            // Use fallback if no cache or invalid ID
-            if (!games || id >= games.length) {
-                games = fallbackGames;
-                if (id >= games.length) {
+                if (gameId >= games.length || gameId < 0) {
                     document.getElementById("game-details-content").innerHTML = `
                         <div class="game-content">
-                            <p class="error-message">Game not found for ID: ${id}</p>
+                            <p class="error-message">Game not found for ID: ${gameId}</p>
                         </div>
                     `;
                     return;
                 }
-            }
 
-            // Render initial content from cache or fallback
-            const game = games[id];
-            document.title = `${game.title} - GameHub`;
-            const cleanDownload = game.download ? game.download.trim() : '#';
-            const thumbnailImage = game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
-            const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
-
-            document.getElementById("game-details-content").innerHTML = `
-                <div class="game-content">
-                    <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
-                    <h1>${game.title}</h1>
-                    <p><b>Developer:</b> ${game.developer}</p>
-                    <p><b>Version:</b> ${game.version}</p>
-                    <p><b>Status:</b> ${game.status}</p>
-                    <p><b>Language:</b> ${game.language}</p>
-                    <p><b>Description:</b> ${game.description}</p>
-                    <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                    ${galleryImages.length > 0 ? `
-                        <h3>Screenshots (${galleryImages.length})</h3>
-                        <div class="gallery">
-                            ${galleryImages.map((img, index) => `
-                                <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-
-            // Append math challenge
-            const math = generateMathQuestion();
-            const gameContent = document.querySelector(".game-content");
-            gameContent.insertAdjacentHTML("beforeend", `
-                <div class="download-section">
-                    <div class="math-challenge">
-                        <label for="math-answer">${math.question}</label>
-                        <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                        <button id="verify-answer">Verify</button>
+                const game = games[gameId];
+                document.title = `${game.title} - GameHub`;
+                const cleanDownload = game.download ? game.download.trim() : '#';
+                const thumbnailImage = await preloadImage(
+                    game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
+                    'https://via.placeholder.com/400x200?text=Game+Cover'
+                );
+                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
+                const preloadedGalleryImages = await Promise.all(
+                    galleryImages.map(img => preloadImage(img, 'https://via.placeholder.com/200x150?text=Game+Cover'))
+                );
+                let galleryHTML = preloadedGalleryImages.length > 0 ? `
+                    <h3>Screenshots (${preloadedGalleryImages.length})</h3>
+                    <div class="gallery">
+                        ${preloadedGalleryImages.map((img, index) => `
+                            <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')">
+                        `).join('')}
                     </div>
-                    <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
-                </div>
-            `);
+                ` : '';
 
-            // Attempt to fetch and decode games.pb with static schema
-            if (!cachedGames) {
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
-                    const root = protobuf.Root.fromJSON(staticSchema);
-                    const GameListMessage = root.lookupType("gamehub.GameList");
-                    const response = await fetch('public/data/games.pb', { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
-                    const protoBinaryData = new Uint8Array(await response.arrayBuffer());
-                    const message = GameListMessage.decode(protoBinaryData);
-                    games = message.games;
-                    localStorage.setItem("games", JSON.stringify(games)); // Cache for future use
+                const math = generateMathQuestion();
+                document.getElementById("game-details-content").innerHTML = `
+                    <div class="game-content">
+                        <h1>${game.title}</h1>
+                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" loading="lazy">
+                        ${galleryHTML}
+                        <p><b>Developer:</b> ${game.developer}</p>
+                        <p><b>Version:</b> ${game.version}</p>
+                        <p><b>Status:</b> ${game.status}</p>
+                        <p><b>Language:</b> ${game.language}</p>
+                        <p><b>Description:</b> ${game.description}</p>
+                        <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
+                        <div class="download-section">
+                            <div class="math-challenge">
+                                <label for="math-answer">${math.question}</label>
+                                <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
+                                <button id="verify-answer">Verify</button>
+                            </div>
+                            <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
+                        </div>
+                    </div>
+                `;
 
-                    // Update if fetched game differs
-                    if (id < games.length && JSON.stringify(games[id]) !== JSON.stringify(game)) {
-                        const updatedGame = games[id];
-                        document.title = `${updatedGame.title} - GameHub`;
-                        const updatedDownload = updatedGame.download ? updatedGame.download.trim() : '#';
-                        const updatedThumbnail = updatedGame.thumbnail || (updatedGame.images && updatedGame.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
-                        const updatedGallery = updatedGame.images ? updatedGame.images.filter(img => img !== updatedGame.thumbnail) : [];
-                        document.getElementById("game-details-content").innerHTML = `
-                            <div class="game-content">
-                                <img src="${updatedThumbnail}" class="game-thumbnail" alt="${updatedGame.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
-                                <h1>${updatedGame.title}</h1>
-                                <p><b>Developer:</b> ${updatedGame.developer}</p>
-                                <p><b>Version:</b> ${updatedGame.version}</p>
-                                <p><b>Status:</b> ${updatedGame.status}</p>
-                                <p><b>Language:</b> ${updatedGame.language}</p>
-                                <p><b>Description:</b> ${updatedGame.description}</p>
-                                <p><b>Tags:</b> ${updatedGame.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                                ${updatedGallery.length > 0 ? `
-                                    <h3>Screenshots (${updatedGallery.length})</h3>
-                                    <div class="gallery">
-                                        ${updatedGallery.map((img, index) => `
-                                            <img src="${img}" alt="${updatedGame.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
-                                        `).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                        gameContent.innerHTML = ''; // Clear previous content
-                        gameContent.insertAdjacentHTML("beforeend", `
-                            <div class="download-section">
-                                <div class="math-challenge">
-                                    <label for="math-answer">${math.question}</label>
-                                    <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                    <button id="verify-answer">Verify</button>
-                                </div>
-                                <a href="${updatedDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
-                            </div>
-                        `);
+                document.getElementById("verify-answer").addEventListener("click", () => {
+                    const userAnswer = parseInt(document.getElementById("math-answer").value);
+                    const downloadLink = document.getElementById("download-link");
+                    if (userAnswer === math.answer) {
+                        downloadLink.classList.add("active");
+                        downloadLink.setAttribute("aria-disabled", "false");
+                    } else {
+                        alert("Incorrect answer. Please try again.");
+                        document.getElementById("math-answer").value = "";
                     }
-                } catch (error) {
-                    console.error("Protobuf decoding failed, using fallback:", error);
-                    // Fallback already rendered, no further action needed
-                }
-            }
+                });
 
-            // Fetch JSON fallback if Protobuf fails
-            if (!cachedGames) {
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
-                    const response = await fetch('public/data/games.json', { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`Failed to fetch games.json: ${response.statusText}`);
-                    games = await response.json();
-                    localStorage.setItem("games", JSON.stringify(games)); // Cache JSON data
-
-                    if (id < games.length && JSON.stringify(games[id]) !== JSON.stringify(game)) {
-                        const updatedGame = games[id];
-                        document.title = `${updatedGame.title} - GameHub`;
-                        const updatedDownload = updatedGame.download ? updatedGame.download.trim() : '#';
-                        const updatedThumbnail = updatedGame.thumbnail || (updatedGame.images && updatedGame.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
-                        const updatedGallery = updatedGame.images ? updatedGame.images.filter(img => img !== updatedGame.thumbnail) : [];
-                        document.getElementById("game-details-content").innerHTML = `
-                            <div class="game-content">
-                                <img src="${updatedThumbnail}" class="game-thumbnail" alt="${updatedGame.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
-                                <h1>${updatedGame.title}</h1>
-                                <p><b>Developer:</b> ${updatedGame.developer}</p>
-                                <p><b>Version:</b> ${updatedGame.version}</p>
-                                <p><b>Status:</b> ${updatedGame.status}</p>
-                                <p><b>Language:</b> ${updatedGame.language}</p>
-                                <p><b>Description:</b> ${updatedGame.description}</p>
-                                <p><b>Tags:</b> ${updatedGame.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                                ${updatedGallery.length > 0 ? `
-                                    <h3>Screenshots (${updatedGallery.length})</h3>
-                                    <div class="gallery">
-                                        ${updatedGallery.map((img, index) => `
-                                            <img src="${img}" alt="${updatedGame.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
-                                        `).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                        gameContent.innerHTML = ''; // Clear previous content
-                        gameContent.insertAdjacentHTML("beforeend", `
-                            <div class="download-section">
-                                <div class="math-challenge">
-                                    <label for="math-answer">${math.question}</label>
-                                    <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                    <button id="verify-answer">Verify</button>
-                                </div>
-                                <a href="${updatedDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
-                            </div>
-                        `);
+                document.getElementById("math-answer").addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        document.getElementById("verify-answer").click();
                     }
-                } catch (error) {
-                    console.error("JSON fallback failed, using existing fallback:", error);
-                    // Rely on initial fallback
-                }
+                });
+
+                document.getElementById("search-button").addEventListener("click", handleSearch);
+                document.getElementById("search-input").addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        handleSearch();
+                    }
+                });
+
+                document.getElementById("modal-close").addEventListener("click", closeModal);
+                document.getElementById("image-modal").addEventListener("click", (e) => {
+                    if (e.target === document.getElementById("image-modal")) {
+                        closeModal();
+                    }
+                });
+
+                initializeModalZoom();
+            } catch (error) {
+                document.getElementById("game-details-content").innerHTML = `
+                    <div class="game-content">
+                        <p class="error-message">Failed to load game details: ${error.message}</p>
+                    </div>
+                `;
             }
-
-            // Event listeners
-            document.getElementById("verify-answer").addEventListener("click", () => {
-                const userAnswer = parseInt(document.getElementById("math-answer").value);
-                const downloadLink = document.getElementById("download-link");
-                if (userAnswer === math.answer) {
-                    downloadLink.classList.add("active");
-                    downloadLink.setAttribute("aria-disabled", "false");
-                } else {
-                    alert("Incorrect answer. Please try again.");
-                    document.getElementById("math-answer").value = "";
-                }
-            });
-
-            document.getElementById("math-answer").addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    document.getElementById("verify-answer").click();
-                }
-            });
-
-            document.getElementById("search-button").addEventListener("click", handleSearch);
-            document.getElementById("search-input").addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    handleSearch();
-                }
-            });
-
-            document.getElementById("modal-close").addEventListener("click", closeModal);
-            document.getElementById("image-modal").addEventListener("click", (e) => {
-                if (e.target === document.getElementById("image-modal")) {
-                    closeModal();
-                }
-            });
         }
 
         window.onload = loadDetails;

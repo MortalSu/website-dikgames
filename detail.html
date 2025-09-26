@@ -621,7 +621,6 @@
         "description": "Detailed information about a specific game on GameHub."
     }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
     <script>
         // Static fallback data
         const fallbackGames = [
@@ -638,35 +637,6 @@
                 images: ["https://via.placeholder.com/200x150?text=Screenshot+1"]
             }
         ];
-
-        // Precompiled static schema (avoiding eval)
-        const staticSchema = {
-            nested: {
-                gamehub: {
-                    nested: {
-                        Game: {
-                            fields: {
-                                1: { name: "title", type: "string" },
-                                2: { name: "developer", type: "string" },
-                                3: { name: "version", type: "string" },
-                                4: { name: "status", type: "string" },
-                                5: { name: "tags", rule: "repeated", type: "string" },
-                                6: { name: "description", type: "string" },
-                                7: { name: "download", type: "string" },
-                                8: { name: "language", type: "string" },
-                                9: { name: "images", rule: "repeated", type: "string" },
-                                10: { name: "thumbnail", type: "string" }
-                            }
-                        },
-                        GameList: {
-                            fields: {
-                                1: { name: "games", rule: "repeated", type: "gamehub.Game" }
-                            }
-                        }
-                    }
-                }
-            }
-        };
 
         // Generate random math question
         function generateMathQuestion() {
@@ -891,19 +861,15 @@
                 </div>
             `);
 
-            // Attempt to fetch and decode games.pb with static schema
+            // Fetch JSON data (replacing games.pb)
             if (!cachedGames) {
                 try {
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
-                    const root = protobuf.Root.fromJSON(staticSchema);
-                    const GameListMessage = root.lookupType("gamehub.GameList");
-                    const response = await fetch('public/data/games.pb', { signal: controller.signal });
+                    const response = await fetch('public/data/games.json', { signal: controller.signal });
                     clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
-                    const protoBinaryData = new Uint8Array(await response.arrayBuffer());
-                    const message = GameListMessage.decode(protoBinaryData);
-                    games = message.games;
+                    if (!response.ok) throw new Error(`Failed to fetch games.json: ${response.statusText}`);
+                    games = await response.json();
                     localStorage.setItem("games", JSON.stringify(games)); // Cache for future use
 
                     // Update if fetched game differs
@@ -946,62 +912,7 @@
                         `);
                     }
                 } catch (error) {
-                    console.error("Protobuf decoding failed, using fallback:", error);
-                    // Fallback already rendered, no further action needed
-                }
-            }
-
-            // Fetch JSON fallback if Protobuf fails
-            if (!cachedGames) {
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
-                    const response = await fetch('public/data/games.json', { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`Failed to fetch games.json: ${response.statusText}`);
-                    games = await response.json();
-                    localStorage.setItem("games", JSON.stringify(games)); // Cache JSON data
-
-                    if (id < games.length && JSON.stringify(games[id]) !== JSON.stringify(game)) {
-                        const updatedGame = games[id];
-                        document.title = `${updatedGame.title} - GameHub`;
-                        const updatedDownload = updatedGame.download ? updatedGame.download.trim() : '#';
-                        const updatedThumbnail = updatedGame.thumbnail || (updatedGame.images && updatedGame.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
-                        const updatedGallery = updatedGame.images ? updatedGame.images.filter(img => img !== updatedGame.thumbnail) : [];
-                        document.getElementById("game-details-content").innerHTML = `
-                            <div class="game-content">
-                                <img src="${updatedThumbnail}" class="game-thumbnail" alt="${updatedGame.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
-                                <h1>${updatedGame.title}</h1>
-                                <p><b>Developer:</b> ${updatedGame.developer}</p>
-                                <p><b>Version:</b> ${updatedGame.version}</p>
-                                <p><b>Status:</b> ${updatedGame.status}</p>
-                                <p><b>Language:</b> ${updatedGame.language}</p>
-                                <p><b>Description:</b> ${updatedGame.description}</p>
-                                <p><b>Tags:</b> ${updatedGame.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                                ${updatedGallery.length > 0 ? `
-                                    <h3>Screenshots (${updatedGallery.length})</h3>
-                                    <div class="gallery">
-                                        ${updatedGallery.map((img, index) => `
-                                            <img src="${img}" alt="${updatedGame.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
-                                        `).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                        gameContent.innerHTML = ''; // Clear previous content
-                        gameContent.insertAdjacentHTML("beforeend", `
-                            <div class="download-section">
-                                <div class="math-challenge">
-                                    <label for="math-answer">${math.question}</label>
-                                    <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                    <button id="verify-answer">Verify</button>
-                                </div>
-                                <a href="${updatedDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
-                            </div>
-                        `);
-                    }
-                } catch (error) {
-                    console.error("JSON fallback failed, using existing fallback:", error);
+                    console.error("JSON fetch failed, using existing fallback:", error);
                     // Rely on initial fallback
                 }
             }

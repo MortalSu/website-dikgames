@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Details - GameHub</title>
+    <!-- Add preconnect hints for critical origins -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.rel='stylesheet'"
         integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
         crossorigin="anonymous">
@@ -26,6 +29,11 @@
             padding: 0;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
+        }
+
+        /* Add font-display: swap for Font Awesome to mitigate layout shifts */
+        @font-face {
+            font-display: swap;
         }
 
         body {
@@ -777,7 +785,7 @@
                 document.getElementById("game-details-content").innerHTML = `
                     <div class="game-content">
                         <h2>${game.title}</h2>
-                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" width="400" height="200">
+                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" width="400" height="200" fetchpriority="high">
                         ${galleryHTML}
                         <p><b>Developer:</b> ${game.developer}</p>
                         <p><b>Version:</b> ${game.version}</p>
@@ -843,4 +851,3 @@
 </body>
 
 </html>
-

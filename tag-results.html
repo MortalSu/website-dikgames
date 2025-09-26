@@ -175,7 +175,7 @@
             gap: 1.5rem;
             padding-bottom: 2rem;
             width: 100%;
-            min-height: 200px; /* Prevent CLS */
+            min-height: 360px; /* Reserve space for one row of cards */
         }
 
         .game-card {
@@ -184,7 +184,7 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
             transition: var(--transition);
-            min-height: 300px; /* Prevent CLS */
+            min-height: 300px; /* Consistent height for cards */
         }
 
         .game-card:hover {
@@ -198,6 +198,7 @@
             height: 200px;
             object-fit: cover;
             display: block;
+            aspect-ratio: 5 / 4; /* Prevent CLS */
         }
 
         .game-image:not(:first-child) {
@@ -206,6 +207,7 @@
 
         .game-info {
             padding: 1rem;
+            min-height: 100px; /* Reserve space for text content */
         }
 
         .game-title {
@@ -238,6 +240,7 @@
             align-items: center;
             gap: 0.75rem;
             padding: 1.5rem;
+            min-height: 50px; /* Prevent CLS */
         }
 
         .pagination button {
@@ -268,22 +271,44 @@
             font-size: 0.9rem;
         }
 
-        .loading {
+        .loading, .error-message {
             text-align: center;
             color: var(--text-muted);
             font-size: 1rem;
             grid-column: 1 / -1;
             padding: 2rem;
-            min-height: 200px; /* Prevent CLS */
+            min-height: 360px; /* Match games-grid height */
         }
 
-        .error-message {
-            color: var(--error-color);
-            text-align: center;
-            grid-column: 1 / -1;
-            padding: 2rem;
-            font-size: 1rem;
-            min-height: 200px; /* Prevent CLS */
+        .loading-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 25vw, 250px), 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            min-height: 360px; /* Match games-grid height */
+        }
+
+        .skeleton-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            min-height: 300px; /* Match game-card height */
+            animation: pulse 1.5s infinite;
+        }
+
+        .skeleton-image {
+            width: 100%;
+            height: 200px;
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
+        }
+
+        .skeleton-text {
+            margin: 1rem;
+            height: 16px;
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
         }
 
         .links-grid {
@@ -350,7 +375,6 @@
         }
 
         .skeleton {
-            background: var(--card-bg);
             animation: pulse 1.5s infinite;
         }
 
@@ -366,11 +390,11 @@
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
             }
 
-            .games-grid {
+            .games-grid, .loading-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
 
-            .game-image {
+            .game-image, .skeleton-image {
                 height: 180px;
             }
 
@@ -390,11 +414,11 @@
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
             }
 
-            .games-grid {
+            .games-grid, .loading-grid {
                 grid-template-columns: 1fr;
             }
 
-            .game-image {
+            .game-image, .skeleton-image {
                 height: 150px;
             }
 
@@ -426,7 +450,23 @@
         <section class="tag-results-container" aria-labelledby="tag-results">
             <h2 class="section-title" id="tag-results">Games by Tag</h2>
             <div class="games-grid" id="games-grid" role="list">
-                <p class="loading">Loading games...</p>
+                <div class="loading-grid">
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                </div>
             </div>
             <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
         </section>
@@ -540,7 +580,7 @@
 
                 if (allGames.length === 0) {
                     document.getElementById("games-grid").innerHTML = `
-                        <p class="error-message">No games available.</p>`;
+                        <p class="error-message skeleton">No games available.</p>`;
                     return;
                 }
 
@@ -556,19 +596,37 @@
             } catch (error) {
                 console.error("Error loading games:", error);
                 document.getElementById("games-grid").innerHTML = `
-                    <p class="error-message">Failed to load games: ${error.message}</p>`;
+                    <p class="error-message skeleton">Failed to load games: ${error.message}</p>`;
             }
         }
 
         async function renderGames(gameList, page = 1) {
             const gamesGrid = document.getElementById("games-grid");
-            gamesGrid.innerHTML = '<p class="loading">Loading games...</p>';
+            gamesGrid.innerHTML = `
+                <div class="loading-grid">
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                </div>
+            `;
             const start = (page - 1) * gamesPerPage;
             const end = start + gamesPerPage;
             const paginatedGames = gameList.slice(start, end);
 
             if (paginatedGames.length === 0) {
-                gamesGrid.innerHTML = `<p class="error-message">No games found for tag "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}".</p>`;
+                gamesGrid.innerHTML = `<p class="error-message skeleton">No games found for tag "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}".</p>`;
                 renderPagination(gameList);
                 return;
             }
@@ -596,6 +654,8 @@
                         <img src="${src}" 
                              class="game-image" 
                              alt="${game.title} game cover" 
+                             width="250" 
+                             height="200"
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
                              ${isFirstImage ? 'fetchpriority="high"' : 'loading="lazy"'}
                              srcset="${srcset}"

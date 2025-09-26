@@ -4,27 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO: Descriptive title under 60 characters, dynamically set in JS -->
-    <title>Game Details - GameHub</title>
-    <!-- SEO: Meta description for click-through rate -->
-    <meta name="description" content="Explore detailed information, screenshots, and downloads for your favorite games on GameHub.">
-    <!-- SEO: Relevant keywords -->
-    <meta name="keywords" content="game details, GameHub, video games, game downloads, gaming platform">
-    <!-- SEO: Allow indexing -->
+    <title>GameHub - Tag Results</title>
+    <meta name="description" content="Explore games by tag on GameHub, your one-stop platform for gaming.">
+    <meta name="keywords" content="games, gaming platform, video games, GameHub, game tags">
     <meta name="robots" content="index, follow">
-    <!-- SEO: Canonical URL to prevent duplicate content -->
-    <link rel="canonical" href="https://www.gamehub.com/game-details.html">
-    <!-- SEO: Open Graph for social sharing -->
-    <meta property="og:title" content="Game Details - GameHub">
-    <meta property="og:description" content="Discover game details, screenshots, and download links on GameHub.">
-    <meta property="og:image" content="https://www.gamehub.com/images/gamehub-og-image.jpg">
-    <meta property="og:url" content="https://www.gamehub.com/game-details.html">
+    <meta name="author" content="GameHub Team">
+    <meta property="og:title" content="GameHub - Tag Results">
+    <meta property="og:description"
+        content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://gamehub.example.com/tag-results.html">
     <meta property="og:type" content="website">
-    <!-- SEO: Twitter Card for social sharing -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Game Details - GameHub">
-    <meta name="twitter:description" content="Discover game details, screenshots, and download links on GameHub.">
-    <meta name="twitter:image" content="https://www.gamehub.com/images/gamehub-og-image.jpg">
+    <meta name="twitter:title" content="GameHub - Tag Results">
+    <meta name="twitter:description"
+        content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
+    <meta name="twitter:image"
+        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <link rel="canonical" href="https://gamehub.example.com/tag-results.html">
+    <link rel="preload" href="/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/AnonymousPro-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg" as="image">
     <style>
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
@@ -35,22 +36,24 @@
             --border-color: rgba(255, 255, 255, 0.4);
             --text-white: #ffffff;
             --text-muted: #cccccc;
+            --cloud-glow: rgba(255, 255, 255, 0.2);
+            --error-color: #ff6b6b;
             --transition: all 0.3s ease;
         }
 
         @font-face {
             font-family: 'Anonymous Pro';
             src: url('/fonts/AnonymousPro-Regular.woff2') format('woff2'),
-                 url('/fonts/AnonymousPro-Regular.woff') format('woff');
+                url('/fonts/AnonymousPro-Regular.woff') format('woff');
             font-weight: 400;
             font-style: normal;
-            font-display: swap;
+            font-display: swap; /* Changed to swap to ensure smoother font loading */
         }
 
         @font-face {
             font-family: 'Anonymous Pro';
             src: url('/fonts/AnonymousPro-Bold.woff2') format('woff2'),
-                 url('/fonts/AnonymousPro-Bold.woff') format('woff');
+                url('/fonts/AnonymousPro-Bold.woff') format('woff');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -60,7 +63,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Anonymous Pro', monospace, sans-serif;
+            font-family: 'Anonymous Pro', 'Courier New', monospace;
         }
 
         body {
@@ -156,9 +159,10 @@
             margin: 0 auto;
         }
 
-        .game-details,
+        .tag-results-container,
         .links-container {
             margin: 0 clamp(2.5rem, 6vw, 3rem);
+            contain: layout; /* Prevent layout shifts */
         }
 
         .section-title {
@@ -170,246 +174,141 @@
             margin-bottom: 1.5rem;
         }
 
-        .game-content {
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 500px;
-        }
-
-        .game-content h1 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: var(--text-white);
-            text-align: left;
+        .games-grid,
+        .loading-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 25vw, 250px), 1fr));
+            gap: 1.5rem;
+            padding-bottom: 2rem;
             width: 100%;
-            max-width: 600px;
+            min-height: 360px;
         }
 
-        .game-content p {
-            margin: 10px 0;
-            font-size: 15px;
-            color: var(--text-muted);
-            text-align: left;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .game-content b {
-            color: var(--solid-primary);
-        }
-
-        .game-thumbnail {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin: 0 auto 20px;
-            aspect-ratio: 2 / 1;
-        }
-
-        .download-section {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .math-challenge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .math-challenge label {
-            color: var(--text-white);
-            font-size: 15px;
-        }
-
-        .math-challenge input {
-            padding: 5px;
-            width: 60px;
+        .game-card,
+        .skeleton-card {
             background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
-            color: var(--text-white);
-            font-size: 14px;
-            text-align: center;
+            transition: var(--transition);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .math-challenge button {
-            background-color: var(--primary-color);
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            border-color: var(--secondary-color);
+        }
+
+        .game-image,
+        .skeleton-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            aspect-ratio: 5 / 4;
+        }
+
+        .skeleton-image {
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
+        }
+
+        .game-info {
+            padding: 1rem;
+            min-height: 100px;
+            flex-grow: 1;
+        }
+
+        .game-title {
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
             color: var(--text-white);
-            padding: 5px 15px;
+        }
+
+        .game-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .game-description {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            min-height: 50px;
+        }
+
+        .pagination button {
+            background-color: var(--primary-color);
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            color: var(--text-white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             cursor: pointer;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
 
-        .math-challenge button:hover {
+        .pagination button:hover:not(:disabled) {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
         }
 
-        .download-button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--text-white);
-            padding: 10px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            font-weight: bold;
-            text-align: center;
-            transition: var(--transition);
-            pointer-events: none;
+        .pagination button:disabled {
+            background-color: rgba(204, 204, 204, 0.3);
+            border-color: var(--text-muted);
+            cursor: not-allowed;
             opacity: 0.6;
         }
 
-        .download-button.active {
-            pointer-events: auto;
-            opacity: 1;
-        }
-
-        .download-button:hover.active {
-            background-color: var(--secondary-color);
-            border-color: var(--solid-primary);
-        }
-
-        .tag-button {
-            background-color: var(--primary-color);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
+        .pagination span {
             color: var(--text-white);
             font-size: 0.9rem;
-            transition: var(--transition);
-            text-transform: capitalize;
         }
 
-        .tag-button:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--solid-primary);
-        }
-
-        .gallery {
-            margin-top: 25px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-            width: 100%;
-            max-width: 600px;
-            min-height: 150px;
-        }
-
-        .gallery h3 {
-            grid-column: 1 / -1;
-            text-align: left;
-            margin-bottom: 10px;
-            color: var(--text-white);
-        }
-
-        .gallery img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .gallery img:hover {
-            transform: scale(1.03);
-        }
-
+        .loading,
         .error-message {
-            color: #ff6b6b;
             text-align: center;
-            padding: 40px;
-            font-size: 18px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            grid-column: 1 / -1;
+            padding: 2rem;
+            min-height: 360px;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-image-container {
-            position: relative;
-            max-width: 90vw;
-            max-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: grab;
-        }
-
-        .modal-image-container:active {
-            cursor: grabbing;
-        }
-
-        .modal img {
-            max-width: none;
-            max-height: none;
-            width: auto;
-            height: auto;
-            transform-origin: 0 0;
-            transition: transform 0.2s ease;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: var(--text-white);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .modal-close:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--solid-primary);
-        }
-
-        .modal-close svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text-white);
-        }
-
-        .links-container {
-            margin: 2rem clamp(2.5rem, 6vw, 3rem);
+        .skeleton-text {
+            margin: 1rem;
+            height: 16px;
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
         }
 
         .links-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 160px);
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
+            min-height: 184px;
+            width: 100%;
+            contain: layout; /* Prevent layout shifts */
         }
 
         .link-button {
@@ -419,7 +318,17 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 0.9rem;
+            font-family: 'Anonymous Pro', 'Courier New', monospace;
+            font-weight: 400;
+            line-height: 1.2;
             transition: var(--transition);
+            text-align: center;
+            width: 160px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         .link-button:hover {
@@ -466,50 +375,41 @@
         }
 
         .skeleton {
-            background: var(--card-bg);
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+            0% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.6;
+            }
         }
 
         @media (max-width: 768px) {
-            .game-details,
+            .links-grid {
+                grid-template-columns: repeat(2, 160px);
+                min-height: 184px;
+                justify-content: center;
+            }
+
+            .tag-results-container,
             .links-container {
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
             }
 
-            .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                max-width: 500px;
+            .games-grid,
+            .loading-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
 
-            .gallery img {
-                height: 120px;
-            }
-
-            .game-thumbnail {
-                max-width: 300px;
-            }
-
-            .modal-image-container {
-                max-width: 95vw;
-                max-height: 80vh;
-            }
-
-            .modal-close {
-                top: 15px;
-                right: 15px;
-                width: 35px;
-                height: 35px;
-            }
-
-            .modal-close svg {
-                width: 18px;
-                height: 18px;
+            .game-image,
+            .skeleton-image {
+                height: 180px;
             }
 
             .top-bar {
@@ -523,59 +423,31 @@
         }
 
         @media (max-width: 480px) {
-            .game-details,
-            .links-container {
-                margin: 0 clamp(1.5rem, 4vw, 2rem);
-            }
-
-            .game-content {
-                padding: 20px;
-            }
-
-            .game-content h1,
-            .game-content p,
-            .download-section {
-                max-width: 100%;
-            }
-
-            .game-thumbnail {
-                max-width: 100%;
-            }
-
-            .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                max-width: 100%;
-            }
-
-            .gallery img {
-                height: 100px;
-            }
-
-            .modal-image-container {
-                max-width: 98vw;
-                max-height: 75vh;
-            }
-
-            .modal-close {
-                top: 10px;
-                right: 10px;
-                width: 30px;
-                height: 30px;
-            }
-
-            .modal-close svg {
-                width: 16px;
-                height: 16px;
+            .links-grid {
+                grid-template-columns: 1fr;
+                min-height: 184px;
+                justify-items: center;
             }
 
             .link-button {
                 width: 100%;
-                padding: 0.75rem;
+                max-width: 160px;
+                margin: 0 auto;
             }
 
-            .social-links svg {
-                width: 18px;
-                height: 18px;
+            .tag-results-container,
+            .links-container {
+                margin: 0 clamp(1.5rem, 4vw, 2rem);
+            }
+
+            .games-grid,
+            .loading-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-image,
+            .skeleton-image {
+                height: 150px;
             }
         }
     </style>
@@ -588,52 +460,45 @@
             <input type="text" id="search-input" placeholder="Search games..." aria-label="Search for games">
             <button id="search-button" aria-label="Search">
                 <svg viewBox="0 0 512 512" aria-hidden="true">
-                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/>
+                    <path
+                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z" />
                 </svg>
             </button>
         </div>
     </header>
     <main>
-        <section class="game-details" aria-labelledby="game-details">
-            <h1 class="section-title" id="game-details">Game Details</h1>
-            <div id="game-details-content">
-                <div class="game-content">
-                    <h2 class="skeleton" style="height: 28px; width: 100%; max-width: 300px;"></h2>
-                    <div class="skeleton game-thumbnail" style="width: 100%; max-width: 400px; height: 200px;"></div>
-                    <h3 class="skeleton" style="height: 20px; width: 200px;"></h3>
-                    <div class="gallery skeleton" style="min-height: 150px; width: 100%; max-width: 600px;"></div>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
-                    <div class="download-section">
-                        <div class="math-challenge skeleton" style="height: 30px; width: 300px; margin-bottom: 15px;"></div>
-                        <a class="download-button skeleton" style="height: 40px; width: 150px; pointer-events: none; opacity: 1;"></a>
+        <section class="tag-results-container" aria-labelledby="tag-results">
+            <h2 class="section-title" id="tag-results">Games by Tag</h2>
+            <div class="games-grid" id="games-grid" role="list">
+                <div class="loading-grid">
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
                     </div>
                 </div>
             </div>
+            <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
         </section>
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
-            <div class="links-grid">
+            <div class="links-grid" id="links-grid">
                 <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
                 <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
                 <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
                 <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
             </div>
         </section>
-        <div id="image-modal" class="modal">
-            <div class="modal-image-container" id="modal-image-container">
-                <img id="modal-image" src="" alt="Large game screenshot">
-            </div>
-            <button class="modal-close" id="modal-close" aria-label="Close image">
-                <svg viewBox="0 0 320 512" aria-hidden="true">
-                    <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/>
-                </svg>
-            </button>
-        </div>
     </main>
     <footer>
         <div class="footer-content">
@@ -641,194 +506,74 @@
             <div class="social-links">
                 <a href="https://twitter.com/gamehub" aria-label="Follow GameHub on Twitter">
                     <svg viewBox="0 0 512 512" aria-hidden="true">
-                        <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/>
+                        <path
+                            d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
                     </svg>
                 </a>
                 <a href="https://facebook.com/gamehub" aria-label="Follow GameHub on Facebook">
                     <svg viewBox="0 0 512 512" aria-hidden="true">
-                        <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/>
+                        <path
+                            d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z" />
                     </svg>
                 </a>
                 <a href="https://instagram.com/gamehub" aria-label="Follow GameHub on Instagram">
                     <svg viewBox="0 0 448 512" aria-hidden="true">
-                        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.8 9.9 67.6 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+                        <path
+                            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.8 9.9 67.6 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
                     </svg>
                 </a>
                 <a href="https://discord.gg/gamehub" aria-label="Join GameHub on Discord">
                     <svg viewBox="0 0 640 512" aria-hidden="true">
-                        <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C621.685,294.736,600.805,183.683,524.531,69.836ZM351.176,352.332c-29.825,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.938,0,54.563,26.337,54.563,58.668S381.114,352.332,351.176,352.332Zm-134.646,0c-29.938,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.825,0,54.563,26.337,54.563,58.668S246.177,352.332,216.53,352.332Z"/>
+                        <path
+                            d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C621.685,294.736,600.805,183.683,524.531,69.836ZM351.176,352.332c-29.825,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.938,0,54.563,26.337,54.563,58.668S381.114,352.332,351.176,352.332Zm-134.646,0c-29.938,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.825,0,54.563,26.337,54.563,58.668S246.177,352.332,216.53,352.332Z" />
                     </svg>
                 </a>
             </div>
         </div>
     </footer>
     <script type="application/ld+json">
-        // SEO: Schema markup for game details (dynamically populated)
         {
             "@context": "https://schema.org",
-            "@type": "VideoGame",
-            "name": "Game Title",
-            "description": "Game description",
-            "thumbnailUrl": "https://via.placeholder.com/400x200?text=Game+Cover",
-            "image": [],
-            "author": {
-                "@type": "Organization",
-                "name": "Game Developer"
-            },
-            "inLanguage": "English",
-            "genre": [],
-            "url": "https://www.gamehub.com/game-details.html"
+            "@type": "WebSite",
+            "name": "GameHub",
+            "url": "https://gamehub.example.com",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://gamehub.example.com/search.html?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
-    <script>
-        function generateMathQuestion() {
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            return { question: `${num1} + ${num2} = ?`, answer: num1 + num2 };
-        }
-
+    <script defer src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
+    <script defer>
+        // Note: To run this file, use a local web server (e.g., 'npx http-server' or VS Code Live Server)
+        // due to CORS restrictions with fetch requests.
         function preloadImage(url, fallback) {
             return new Promise((resolve) => {
                 const img = new Image();
-                img.onload = () => resolve(url);
-                img.onerror = () => resolve(fallback);
+                img.onload = () => resolve({ src: url, srcset: `${url}?w=250&q=80 250w, ${url}?w=500&q=80 500w` });
+                img.onerror = () => resolve({ 
+                    src: fallback, 
+                    srcset: `${fallback}?w=250&q=80 250w, ${fallback}?w=500&q=80 500w` 
+                });
                 img.src = url;
             });
         }
 
-        function handleSearch() {
-            const query = document.getElementById("search-input").value.trim();
-            if (query) {
-                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
-            }
-        }
-
-        function initializeModalZoom() {
-            const modal = document.getElementById("image-modal");
-            const modalImage = document.getElementById("modal-image");
-            const modalImageContainer = document.getElementById("modal-image-container");
-            let scale = 1, translateX = 0, translateY = 0, isDragging = false, startX = 0, startY = 0, pinchStartDistance = 0;
-
-            function updateTransform() {
-                modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
-            }
-
-            modalImageContainer.addEventListener("wheel", (e) => {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                scale = Math.min(Math.max(scale + delta, 1), 5);
-                updateTransform();
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("mousedown", (e) => {
-                if (scale <= 1) return;
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-                modalImageContainer.style.cursor = "grabbing";
-            });
-
-            modalImageContainer.addEventListener("mousemove", (e) => {
-                if (!isDragging) return;
-                translateX = e.clientX - startX;
-                translateY = e.clientY - startY;
-                updateTransform();
-            });
-
-            modalImageContainer.addEventListener("mouseup", () => {
-                isDragging = false;
-                modalImageContainer.style.cursor = "grab";
-            });
-
-            modalImageContainer.addEventListener("mouseleave", () => {
-                isDragging = false;
-                modalImageContainer.style.cursor = "grab";
-            });
-
-            modalImageContainer.addEventListener("touchstart", (e) => {
-                if (e.touches.length === 1) {
-                    if (scale <= 1) return;
-                    isDragging = true;
-                    startX = e.touches[0].clientX - translateX;
-                    startY = e.touches[0].clientY - translateY;
-                } else if (e.touches.length === 2) {
-                    isDragging = false;
-                    const dx = e.touches[0].clientX - e.touches[1].clientX;
-                    const dy = e.touches[0].clientY - e.touches[1].clientY;
-                    pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
-                }
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("touchmove", (e) => {
-                e.preventDefault();
-                if (isDragging && e.touches.length === 1) {
-                    translateX = e.touches[0].clientX - startX;
-                    translateY = e.touches[0].clientY - startY;
-                    updateTransform();
-                } else if (e.touches.length === 2) {
-                    const dx = e.touches[0].clientX - e.touches[1].clientX;
-                    const dy = e.touches[0].clientY - e.touches[1].clientY;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    scale = Math.min(Math.max(scale * (distance / pinchStartDistance), 1), 5);
-                    pinchStartDistance = distance;
-                    updateTransform();
-                }
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("touchend", () => {
-                isDragging = false;
-                pinchStartDistance = 0;
-            });
-
-            modalImageContainer.addEventListener("dblclick", () => {
-                scale = 1;
-                translateX = 0;
-                translateY = 0;
-                updateTransform();
-            });
-        }
-
-        function showModal(imageSrc) {
-            const modal = document.getElementById("image-modal");
-            const modalImage = document.getElementById("modal-image");
-            modalImage.src = imageSrc;
-            modalImage.alt = "Large game screenshot";
-            modal.style.display = "flex";
-            modalImage.style.transform = "scale(1) translate(0px, 0px)";
-        }
-
-        function closeModal() {
-            document.getElementById("image-modal").style.display = "none";
-        }
-
-        async function loadDetails() {
+        function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
-            const id = params.get("id");
-            const page = params.get("page") || "1";
-            const query = params.get("query") || "";
-            const tag = params.get("tag") || "";
-            const from = params.get("from") || "index";
+            return {
+                page: parseInt(params.get('page')) || 1,
+                tag: params.get('tag') || ''
+            };
+        }
 
-            const logoLink = document.getElementById("logo-link");
-            if (from === "search" && query) {
-                logoLink.href = `search.html?page=${page}&query=${encodeURIComponent(query)}`;
-            } else if (from === "tag-results" && tag) {
-                logoLink.href = `tag-results.html?page=${page}&tag=${encodeURIComponent(tag)}`;
-            } else {
-                logoLink.href = `index.html?page=${page}`;
-            }
+        const gamesPerPage = 6;
+        let currentPage = getUrlParams().page;
+        let currentTag = getUrlParams().tag;
+        let allGames = [];
 
-            if (id === null || isNaN(id) || id < 0) {
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <p class="error-message">Invalid game ID: ${id}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const gameId = parseInt(id, 10);
+        async function fetchGames() {
             try {
                 const protoContent = `
                     syntax = "proto3";
@@ -849,6 +594,7 @@
                         repeated Game games = 1;
                     }
                 `;
+
                 const root = await protobuf.parse(protoContent, { keepCase: true }).root;
                 const GameListMessage = root.lookupType("gamehub.GameList");
                 const response = await fetch('public/data/games.pb');
@@ -857,136 +603,164 @@
                 }
                 const protoBinaryData = new Uint8Array(await response.arrayBuffer());
                 const message = GameListMessage.decode(protoBinaryData);
-                const games = message.games;
+                allGames = message.games;
 
-                if (gameId >= games.length || gameId < 0) {
-                    document.getElementById("game-details-content").innerHTML = `
-                        <div class="game-content">
-                            <p class="error-message">Game not found for ID: ${gameId}</p>
-                        </div>
-                    `;
+                if (allGames.length === 0) {
+                    document.getElementById("games-grid").innerHTML = `
+                        <p class="error-message">No games available.</p>`;
                     return;
                 }
 
-                const game = games[gameId];
-                // SEO: Update title with game name for specificity
-                document.title = `${game.title} - GameHub`;
-                // SEO: Update meta description dynamically
-                document.querySelector('meta[name="description"]').setAttribute('content', `${game.description.substring(0, 160)}`);
-                // SEO: Update Open Graph and Twitter Card dynamically
-                document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.title} - GameHub`);
-                document.querySelector('meta[property="og:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
-                document.querySelector('meta[property="og:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
-                document.querySelector('meta[property="og:url"]').setAttribute('content', `https://www.gamehub.com/game-details.html?id=${gameId}`);
-                document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.title} - GameHub`);
-                document.querySelector('meta[name="twitter:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
-                document.querySelector('meta[name="twitter:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
-                // SEO: Update canonical URL
-                document.querySelector('link[rel="canonical"]').setAttribute('href', `https://www.gamehub.com/game-details.html?id=${gameId}`);
-                
-                const cleanDownload = game.download ? game.download.trim() : '#';
-                const thumbnailImage = await preloadImage(
-                    game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
-                    'https://via.placeholder.com/400x200?text=Game+Cover'
-                );
-                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
-                const preloadedGalleryImages = await Promise.all(
-                    galleryImages.map(img => preloadImage(img, 'https://via.placeholder.com/200x150?text=Game+Cover'))
-                );
-                let galleryHTML = preloadedGalleryImages.length > 0 ? `
-                    <h2>Screenshots (${preloadedGalleryImages.length})</h2>
-                    <div class="gallery">
-                        ${preloadedGalleryImages.map((img, index) => `
-                            <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')" width="180" height="150">
-                        `).join('')}
-                    </div>
-                ` : '';
+                const filteredGames = currentTag ? allGames.filter(game =>
+                    game.tags && game.tags.some(tag => tag.toLowerCase() === currentTag.toLowerCase())
+                ) : allGames;
 
-                // SEO: Update schema markup dynamically
-                const schemaScript = document.createElement('script');
-                schemaScript.type = 'application/ld+json';
-                schemaScript.text = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "VideoGame",
-                    "name": game.title,
-                    "description": game.description,
-                    "thumbnailUrl": thumbnailImage,
-                    "image": preloadedGalleryImages,
-                    "author": {
-                        "@type": "Organization",
-                        "name": game.developer
-                    },
-                    "inLanguage": game.language,
-                    "genre": game.tags,
-                    "url": `https://www.gamehub.com/game-details.html?id=${gameId}`
-                });
-                document.head.appendChild(schemaScript);
-
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <h1>${game.title}</h1>
-                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} cover image" width="400" height="200" fetchpriority="high">
-                        ${galleryHTML}
-                        <p><b>Developer:</b> ${game.developer}</p>
-                        <p><b>Version:</b> ${game.version}</p>
-                        <p><b>Status:</b> ${game.status}</p>
-                        <p><b>Language:</b> ${game.language}</p>
-                        <p><b>Description:</b> ${game.description}</p>
-                        <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                        <div class="download-section">
-                            <div class="math-challenge">
-                                <label for="math-answer">${generateMathQuestion().question}</label>
-                                <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                <button id="verify-answer">Verify</button>
-                            </div>
-                            <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download ${game.title}</a>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById("verify-answer").addEventListener("click", () => {
-                    const userAnswer = parseInt(document.getElementById("math-answer").value);
-                    const downloadLink = document.getElementById("download-link");
-                    if (userAnswer === math.answer) {
-                        downloadLink.classList.add("active");
-                        downloadLink.setAttribute("aria-disabled", "false");
-                    } else {
-                        alert("Incorrect answer. Please try again.");
-                        document.getElementById("math-answer").value = "";
-                    }
-                });
-
-                document.getElementById("math-answer").addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        document.getElementById("verify-answer").click();
-                    }
-                });
-
-                document.getElementById("search-button").addEventListener("click", handleSearch);
-                document.getElementById("search-input").addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        handleSearch();
-                    }
-                });
-
-                document.getElementById("modal-close").addEventListener("click", closeModal);
-                document.getElementById("image-modal").addEventListener("click", (e) => {
-                    if (e.target === document.getElementById("image-modal")) {
-                        closeModal();
-                    }
-                });
-
-                initializeModalZoom();
+                document.getElementById("tag-results").textContent = `Games by Tag: ${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}`;
+                document.querySelector('meta[name="description"]').setAttribute('content', `Explore ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
+                document.querySelector('meta[property="og:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
+                document.querySelector('meta[name="twitter:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
+                await renderGames(filteredGames, currentPage);
             } catch (error) {
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <p class="error-message">Failed to load game details: ${error.message}</p>
-                    </div>
-                `;
+                console.error("Error loading games:", error);
+                document.getElementById("games-grid").innerHTML = `
+                    <p class="error-message">Failed to load games: ${error.message}</p>`;
             }
         }
 
-        window.onload = loadDetails;
+        async function renderGames(gameList, page = 1) {
+            const gamesGrid = document.getElementById("games-grid");
+            gamesGrid.innerHTML = `
+                <div class="loading-grid">
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                    <div class="skeleton-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-text"></div>
+                    </div>
+                </div>
+            `;
+            const start = (page - 1) * gamesPerPage;
+            const end = start + gamesPerPage;
+            const paginatedGames = gameList.slice(start, end);
+
+            if (paginatedGames.length === 0) {
+                gamesGrid.innerHTML = `<p class="error-message">No games found for tag "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}".</p>`;
+                renderPagination(gameList);
+                return;
+            }
+
+            const fallbackImage = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=250&q=80";
+            const imagePromises = paginatedGames.map((game) => {
+                const imageSrc = game.thumbnail || (game.images && game.images[0]) || fallbackImage;
+                return preloadImage(imageSrc, fallbackImage);
+            });
+            const preloadedImages = await Promise.all(imagePromises);
+            gamesGrid.innerHTML = '';
+
+            paginatedGames.forEach((game, index) => {
+                const gameCard = document.createElement("div");
+                gameCard.setAttribute("role", "listitem");
+                gameCard.className = "game-card";
+                const gameIndex = allGames.findIndex(g => g.title === game.title && g.developer === game.developer);
+                if (gameIndex === -1) {
+                    console.error(`Game index not found for ${game.title}`);
+                    return;
+                }
+                const { src, srcset } = preloadedImages[index];
+                gameCard.innerHTML = `
+                    <a href="detail.html?id=${gameIndex}&page=${currentPage}&tag=${encodeURIComponent(currentTag)}&from=tag-results" aria-label="View details for ${game.title}">
+                        <img src="${src}" 
+                             class="game-image" 
+                             alt="${game.title} game cover" 
+                             width="250" 
+                             height="200"
+                             onerror="this.onerror=null; this.src='${fallbackImage}';" 
+                             fetchpriority="high"
+                             srcset="${srcset}"
+                             sizes="(max-width: 600px) 250px, 500px">
+                        <div class="game-info">
+                            <h3 class="game-title">${game.title}</h3>
+                            <div class="game-meta">
+                                <span>${game.developer}</span>
+                                <span>${game.version}</span>
+                            </div>
+                            <p class="game-description">${game.description.substring(0, 80)}...</p>
+                        </div>
+                    </a>
+                `;
+                gamesGrid.appendChild(gameCard);
+            });
+
+            renderPagination(gameList);
+        }
+
+        function renderPagination(gameList) {
+            const pagination = document.getElementById("pagination");
+            const totalPages = Math.ceil(gameList.length / gamesPerPage);
+            pagination.innerHTML = `
+                <button id="prev-page" ${currentPage === 1 ? "disabled" : ""} aria-label="Previous page">Prev</button>
+                <span aria-current="page">Page ${currentPage} of ${totalPages}</span>
+                <button id="next-page" ${currentPage === totalPages ? "disabled" : ""} aria-label="Next page">Next</button>
+            `;
+
+            document.getElementById("prev-page")?.addEventListener("click", async () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    const queryString = currentTag ? `?page=${currentPage}&tag=${encodeURIComponent(currentTag)}` : `?page=${currentPage}`;
+                    window.history.replaceState({}, '', `${window.location.pathname}${queryString}`);
+                    const filteredGames = currentTag ? allGames.filter(game =>
+                        game.tags && game.tags.some(tag => tag.toLowerCase() === currentTag.toLowerCase())
+                    ) : allGames;
+                    await renderGames(filteredGames, currentPage);
+                }
+            });
+
+            document.getElementById("next-page")?.addEventListener("click", async () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    const queryString = currentTag ? `?page=${currentPage}&tag=${encodeURIComponent(currentTag)}` : `?page=${currentPage}`;
+                    window.history.replaceState({}, '', `${window.location.pathname}${queryString}`);
+                    const filteredGames = currentTag ? allGames.filter(game =>
+                        game.tags && game.tags.some(tag => tag.toLowerCase() === currentTag.toLowerCase())
+                    ) : allGames;
+                    await renderGames(filteredGames, currentPage);
+                }
+            });
+        }
+
+        function handleSearch() {
+            const query = document.getElementById("search-input").value.trim();
+            if (query) {
+                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        document.getElementById("search-button").addEventListener("click", handleSearch);
+        document.getElementById("search-input").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleSearch();
+            }
+        });
+
+        // Debounce resize events to prevent rapid layout shifts
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Trigger any necessary layout updates
+            }, 100);
+        });
+
+        window.onload = fetchGames;
     </script>
 </body>
 

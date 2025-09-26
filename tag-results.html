@@ -19,6 +19,9 @@
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
     <link rel="canonical" href="https://gamehub.example.com/tag-results.html">
     <!-- <link rel="icon" type="image/png" href="path/to/your/favicon.png"> -->
+    <link rel="preload" href="/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/AnonymousPro-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg" as="image">
     <style>
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
@@ -172,6 +175,7 @@
             gap: 1.5rem;
             padding-bottom: 2rem;
             width: 100%;
+            min-height: 200px; /* Prevent CLS */
         }
 
         .game-card {
@@ -180,6 +184,7 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
             transition: var(--transition);
+            min-height: 300px; /* Prevent CLS */
         }
 
         .game-card:hover {
@@ -193,6 +198,9 @@
             height: 200px;
             object-fit: cover;
             display: block;
+        }
+
+        .game-image:not(:first-child) {
             loading: lazy;
         }
 
@@ -266,6 +274,7 @@
             font-size: 1rem;
             grid-column: 1 / -1;
             padding: 2rem;
+            min-height: 200px; /* Prevent CLS */
         }
 
         .error-message {
@@ -274,6 +283,7 @@
             grid-column: 1 / -1;
             padding: 2rem;
             font-size: 1rem;
+            min-height: 200px; /* Prevent CLS */
         }
 
         .links-grid {
@@ -282,6 +292,7 @@
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
+            min-height: 60px; /* Prevent CLS */
         }
 
         .link-button {
@@ -414,7 +425,7 @@
     <main>
         <section class="tag-results-container" aria-labelledby="tag-results">
             <h2 class="section-title" id="tag-results">Games by Tag</h2>
-            <div class="games-grid" id="games-grid" role="grid">
+            <div class="games-grid" id="games-grid" role="list">
                 <p class="loading">Loading games...</p>
             </div>
             <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
@@ -562,7 +573,7 @@
                 return;
             }
 
-            const imagePromises = paginatedGames.map(game => {
+            const imagePromises = paginatedGames.map((game, index) => {
                 const imageSrc = game.thumbnail || (game.images && game.images[0]) || "https://via.placeholder.com/250x200?text=Game+Cover";
                 return preloadImage(imageSrc, "https://via.placeholder.com/250x200?text=Game+Cover");
             });
@@ -570,22 +581,23 @@
             gamesGrid.innerHTML = '';
 
             paginatedGames.forEach((game, index) => {
-                const gameCard = document.createElement("article");
+                const gameCard = document.createElement("div");
+                gameCard.setAttribute("role", "listitem");
                 gameCard.className = "game-card";
-                gameCard.setAttribute("role", "article");
                 const gameIndex = allGames.findIndex(g => g.title === game.title && g.developer === game.developer);
                 if (gameIndex === -1) {
                     console.error(`Game index not found for ${game.title}`);
                     return;
                 }
                 const { src, srcset } = preloadedImages[index];
+                const isFirstImage = index === 0;
                 gameCard.innerHTML = `
                     <a href="detail.html?id=${gameIndex}&page=${currentPage}&tag=${encodeURIComponent(currentTag)}&from=tag-results" aria-label="View details for ${game.title}">
                         <img src="${src}" 
                              class="game-image" 
                              alt="${game.title} game cover" 
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
-                             loading="lazy"
+                             ${isFirstImage ? 'fetchpriority="high"' : 'loading="lazy"'}
                              srcset="${srcset}"
                              sizes="(max-width: 600px) 250px, 500px">
                         <div class="game-info">

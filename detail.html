@@ -15,7 +15,6 @@
     <meta property="og:url" content="https://gamehub.example.com/detail.html">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://gamehub.example.com/detail.html">
-    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32/40c4ff/ffffff?text=GH">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
@@ -624,7 +623,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
     <script>
-        // Static fallback data (small subset of games)
+        // Static fallback data
         const fallbackGames = [
             {
                 title: "Sample Game",
@@ -640,40 +639,40 @@
             }
         ];
 
-        // Cache for protobuf schema
-        let cachedRoot = null;
-        async function getProtoRoot() {
-            if (cachedRoot) return cachedRoot;
-            const protoContent = `
-                syntax = "proto3";
-                package gamehub;
-                message Game {
-                    string title = 1;
-                    string developer = 2;
-                    string version = 3;
-                    string status = 4;
-                    repeated string tags = 5;
-                    string description = 6;
-                    string download = 7;
-                    string language = 8;
-                    repeated string images = 9;
-                    string thumbnail = 10;
+        // Precompiled static schema (avoiding eval)
+        const staticSchema = {
+            nested: {
+                gamehub: {
+                    nested: {
+                        Game: {
+                            fields: {
+                                1: { name: "title", type: "string" },
+                                2: { name: "developer", type: "string" },
+                                3: { name: "version", type: "string" },
+                                4: { name: "status", type: "string" },
+                                5: { name: "tags", rule: "repeated", type: "string" },
+                                6: { name: "description", type: "string" },
+                                7: { name: "download", type: "string" },
+                                8: { name: "language", type: "string" },
+                                9: { name: "images", rule: "repeated", type: "string" },
+                                10: { name: "thumbnail", type: "string" }
+                            }
+                        },
+                        GameList: {
+                            fields: {
+                                1: { name: "games", rule: "repeated", type: "gamehub.Game" }
+                            }
+                        }
+                    }
                 }
-                message GameList {
-                    repeated Game games = 1;
-                }
-            `;
-            const { root } = await protobuf.parse(protoContent, { keepCase: true });
-            cachedRoot = root;
-            return root;
-        }
+            }
+        };
 
         // Generate random math question
         function generateMathQuestion() {
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
-            const answer = num1 + num2;
-            return { question: `${num1} + ${num2} = ?`, answer };
+            return { question: `${num1} + ${num2} = ?`, answer: num1 + num2 };
         }
 
         // Search handler
@@ -703,7 +702,6 @@
 
         // Modal zoom and pan functionality
         function initializeModalZoom() {
-            const modal = document.getElementById("image-modal");
             const modalImage = document.getElementById("modal-image");
             const modalImageContainer = document.getElementById("modal-image-container");
 
@@ -792,16 +790,6 @@
                 translateY = 0;
                 updateTransform();
             });
-
-            modalImageContainer.addEventListener("touchstart", (e) => {
-                if (e.touches.length === 1) {
-                    const touch = e.touches[0];
-                    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                    if (target === modalImage) {
-                        e.preventDefault();
-                    }
-                }
-            });
         }
 
         async function loadDetails() {
@@ -848,7 +836,7 @@
                 }
             }
 
-            // Use fallback data if cache is empty or ID is out of range
+            // Use fallback if no cache or invalid ID
             if (!games || id >= games.length) {
                 games = fallbackGames;
                 if (id >= games.length) {
@@ -861,7 +849,7 @@
                 }
             }
 
-            // Render game from cache or fallback
+            // Render initial content from cache or fallback
             const game = games[id];
             document.title = `${game.title} - GameHub`;
             const cleanDownload = game.download ? game.download.trim() : '#';
@@ -903,18 +891,16 @@
                 </div>
             `);
 
-            // Fetch games.pb in parallel (if not cached)
+            // Attempt to fetch and decode games.pb with static schema
             if (!cachedGames) {
                 try {
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
-                    const root = await getProtoRoot();
+                    const root = protobuf.Root.fromJSON(staticSchema);
                     const GameListMessage = root.lookupType("gamehub.GameList");
                     const response = await fetch('public/data/games.pb', { signal: controller.signal });
                     clearTimeout(timeoutId);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
                     const protoBinaryData = new Uint8Array(await response.arrayBuffer());
                     const message = GameListMessage.decode(protoBinaryData);
                     games = message.games;
@@ -960,8 +946,63 @@
                         `);
                     }
                 } catch (error) {
-                    console.error("Failed to fetch games.pb:", error);
-                    // Fallback already rendered, so no action needed
+                    console.error("Protobuf decoding failed, using fallback:", error);
+                    // Fallback already rendered, no further action needed
+                }
+            }
+
+            // Fetch JSON fallback if Protobuf fails
+            if (!cachedGames) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 500); // 500ms timeout
+                    const response = await fetch('public/data/games.json', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`Failed to fetch games.json: ${response.statusText}`);
+                    games = await response.json();
+                    localStorage.setItem("games", JSON.stringify(games)); // Cache JSON data
+
+                    if (id < games.length && JSON.stringify(games[id]) !== JSON.stringify(game)) {
+                        const updatedGame = games[id];
+                        document.title = `${updatedGame.title} - GameHub`;
+                        const updatedDownload = updatedGame.download ? updatedGame.download.trim() : '#';
+                        const updatedThumbnail = updatedGame.thumbnail || (updatedGame.images && updatedGame.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
+                        const updatedGallery = updatedGame.images ? updatedGame.images.filter(img => img !== updatedGame.thumbnail) : [];
+                        document.getElementById("game-details-content").innerHTML = `
+                            <div class="game-content">
+                                <img src="${updatedThumbnail}" class="game-thumbnail" alt="${updatedGame.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
+                                <h1>${updatedGame.title}</h1>
+                                <p><b>Developer:</b> ${updatedGame.developer}</p>
+                                <p><b>Version:</b> ${updatedGame.version}</p>
+                                <p><b>Status:</b> ${updatedGame.status}</p>
+                                <p><b>Language:</b> ${updatedGame.language}</p>
+                                <p><b>Description:</b> ${updatedGame.description}</p>
+                                <p><b>Tags:</b> ${updatedGame.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
+                                ${updatedGallery.length > 0 ? `
+                                    <h3>Screenshots (${updatedGallery.length})</h3>
+                                    <div class="gallery">
+                                        ${updatedGallery.map((img, index) => `
+                                            <img src="${img}" alt="${updatedGame.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                        gameContent.innerHTML = ''; // Clear previous content
+                        gameContent.insertAdjacentHTML("beforeend", `
+                            <div class="download-section">
+                                <div class="math-challenge">
+                                    <label for="math-answer">${math.question}</label>
+                                    <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
+                                    <button id="verify-answer">Verify</button>
+                                </div>
+                                <a href="${updatedDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
+                            </div>
+                        `);
+                    }
+                } catch (error) {
+                    console.error("JSON fallback failed, using existing fallback:", error);
+                    // Rely on initial fallback
                 }
             }
 

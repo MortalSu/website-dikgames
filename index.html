@@ -21,6 +21,15 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="public/data/games.pb" as="fetch" crossorigin="anonymous">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js" as="script">
+    <!--
+        Note: To optimize font loading and enable caching (saving ~72 KiB), configure the server (e.g., Cloudflare Pages)
+        to serve /fonts/AnonymousPro-Regular.woff2 and /fonts/AnonymousPro-Bold.woff2 with Cache-Control headers:
+        Cache-Control: public, max-age=31536000, immutable
+        This sets a 1-year cache lifetime for repeat visits, improving LCP/FCP.
+        For Cloudflare Pages, add a rule in _headers file:
+        /fonts/*
+          Cache-Control: public, max-age=31536000, immutable
+    -->
     <style>
         @font-face {
             font-family: 'Anonymous Pro';
@@ -500,7 +509,7 @@
         <section class="latest-games-container" aria-labelledby="latest-games">
             <h2 class="section-title" id="latest-games">Latest Updated Games</h2>
             <div class="games-grid" id="games-grid" role="grid" aria-labelledby="latest-games">
-                <p class="loading skeleton">Loading games...</p>
+                <p class="loading skeleton" role="status">Loading games...</p>
             </div>
             <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
         </section>
@@ -635,7 +644,7 @@
 
                 if (allGames.length === 0) {
                     document.getElementById("games-grid").innerHTML = `
-                        <p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton">No games available.</p>`;
+                        <p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton" role="status">No games available.</p>`;
                     return;
                 }
 
@@ -643,7 +652,7 @@
             } catch (error) {
                 console.error("Error loading games:", error);
                 document.getElementById("games-grid").innerHTML = `
-                    <p style="color: #ff6b6b; grid-column: 1/-1; text-align: center;" class="skeleton">Failed to load games: ${error.message}</p>`;
+                    <p style="color: #ff6b6b; grid-column: 1/-1; text-align: center;" class="skeleton" role="status">Failed to load games: ${error.message}</p>`;
             }
         }
 

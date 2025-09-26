@@ -18,12 +18,30 @@
     <meta property="og:url" content="https://gamehub.example.com">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://gamehub.example.com">
-    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32/40c4ff/ffffff?text=GH">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
-        crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32/40c4ff/ffffff?text=GH" fetchpriority="high">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js" as="script">
+    <link rel="preload" href="public/data/games.pb" as="fetch" crossorigin="anonymous">
+    <!-- Font loading with font-display: swap -->
     <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa2pL7.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
             --secondary-color: rgba(2, 136, 209, 0.8);
@@ -362,6 +380,25 @@
             color: var(--solid-primary);
         }
 
+        .skeleton {
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -431,7 +468,8 @@
             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                 alt="Exciting gaming scene showcasing new releases" loading="eager"
                 srcset="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80 600w, 
-                         https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w" sizes="(max-width: 600px) 600px, 1200px">
+                         https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
+                sizes="(max-width: 600px) 600px, 1200px" fetchpriority="high">
         </section>
         <section class="tags-link-container">
             <a href="tags.html" class="tags-link" aria-label="View all game tags">All Tags</a>
@@ -439,7 +477,7 @@
         <section class="latest-games-container" aria-labelledby="latest-games">
             <h2 class="section-title" id="latest-games">Latest Updated Games</h2>
             <div class="games-grid" id="games-grid" role="grid">
-                <p class="loading">Loading games...</p>
+                <p class="loading skeleton">Loading games...</p>
             </div>
             <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
         </section>
@@ -480,7 +518,7 @@
         }
     }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js" defer></script>
     <script>
         // Preload image function to ensure valid images before rendering
         function preloadImage(url, fallback) {
@@ -532,7 +570,7 @@
                 const GameListMessage = root.lookupType("gamehub.GameList");
 
                 // Fetch the protobuf binary data
-                const response = await fetch('public/data/games.pb');
+                const response = await fetch('public/data/games.pb', { cache: 'default' });
                 if (!response.ok) {
                     throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
                 }
@@ -544,7 +582,7 @@
 
                 if (allGames.length === 0) {
                     document.getElementById("games-grid").innerHTML = `
-                        <p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">No games available.</p>`;
+                        <p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton">No games available.</p>`;
                     return;
                 }
 
@@ -552,31 +590,31 @@
             } catch (error) {
                 console.error("Error loading games:", error);
                 document.getElementById("games-grid").innerHTML = `
-                    <p style="color: #ff6b6b; grid-column: 1/-1; text-align: center;">Failed to load games: ${error.message}</p>`;
+                    <p style="color: #ff6b6b; grid-column: 1/-1; text-align: center;" class="skeleton">Failed to load games: ${error.message}</p>`;
             }
         }
 
         async function renderGames(gameList, page = 1) {
             const gamesGrid = document.getElementById("games-grid");
-            gamesGrid.innerHTML = "";
+            gamesGrid.innerHTML = '<p class="loading skeleton">Loading games...</p>';
             const start = (page - 1) * gamesPerPage;
             const end = start + gamesPerPage;
             const paginatedGames = gameList.slice(start, end);
 
             if (paginatedGames.length === 0) {
-                gamesGrid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">No games found.</p>`;
+                gamesGrid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton">No games found.</p>`;
                 renderPagination(gameList);
                 return;
             }
 
             // Preload all thumbnail images before rendering
             const imagePromises = paginatedGames.map(game => {
-                console.log(`Game: ${game.title}, Thumbnail: ${game.thumbnail}, Images: ${JSON.stringify(game.images)}, Image Count: ${game.images ? game.images.length : 0}`);
                 const imageSrc = game.thumbnail || (game.images && game.images[0]) || "https://via.placeholder.com/250x200?text=Game+Cover";
                 return preloadImage(imageSrc, "https://via.placeholder.com/250x200?text=Game+Cover");
             });
             const preloadedImages = await Promise.all(imagePromises);
 
+            gamesGrid.innerHTML = '';
             paginatedGames.forEach((game, index) => {
                 const gameCard = document.createElement("article");
                 gameCard.className = "game-card";
@@ -592,10 +630,12 @@
                         <img src="${src}" 
                              class="game-image" 
                              alt="${game.title} game cover" 
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
+                             onerror="this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
                              loading="lazy"
                              srcset="${srcset}"
-                             sizes="(max-width: 600px) 250px, 500px">
+                             sizes="(max-width: 600px) 250px, 500px"
+                             width="250"
+                             height="200">
                         <div class="game-info">
                             <h3 class="game-title">${game.title}</h3>
                             <div class="game-meta">
@@ -656,7 +696,8 @@
             }
         });
 
-        fetchGames();
+        // Execute fetchGames after DOM is loaded
+        document.addEventListener("DOMContentLoaded", fetchGames);
     </script>
 </body>
 

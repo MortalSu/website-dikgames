@@ -317,7 +317,7 @@
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
-            min-height: 60px; /* Prevent CLS */
+            min-height: 120px; /* Increased to accommodate stacked buttons */
         }
 
         .link-button {
@@ -329,11 +329,23 @@
             font-size: 0.9rem;
             transition: var(--transition);
             text-align: center;
+            min-width: 160px; /* Prevent shrinking */
+            height: 40px; /* Fixed height for consistency */
+            line-height: 1.2; /* Prevent text reflow */
         }
 
         .link-button:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
+        }
+
+        .skeleton-link {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            min-width: 160px;
+            height: 40px;
+            animation: pulse 1.5s infinite;
         }
 
         footer {
@@ -406,6 +418,10 @@
             .search-bar {
                 max-width: 100%;
             }
+
+            .links-grid {
+                min-height: 180px; /* Accommodate stacked buttons */
+            }
         }
 
         @media (max-width: 480px) {
@@ -422,9 +438,14 @@
                 height: 150px;
             }
 
-            .link-button {
+            .link-button, .skeleton-link {
                 width: 100%;
+                min-width: unset;
                 padding: 0.75rem;
+            }
+
+            .links-grid {
+                min-height: 240px; /* Accommodate four stacked buttons */
             }
 
             .social-links svg {
@@ -472,11 +493,11 @@
         </section>
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
-            <div class="links-grid">
-                <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
-                <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
-                <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
-                <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
+            <div class="links-grid" id="links-grid">
+                <div class="skeleton-link skeleton"></div>
+                <div class="skeleton-link skeleton"></div>
+                <div class="skeleton-link skeleton"></div>
+                <div class="skeleton-link skeleton"></div>
             </div>
         </section>
     </main>
@@ -581,6 +602,12 @@
                 if (allGames.length === 0) {
                     document.getElementById("games-grid").innerHTML = `
                         <p class="error-message skeleton">No games available.</p>`;
+                    document.getElementById("links-grid").innerHTML = `
+                        <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
+                        <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
+                        <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
+                        <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
+                    `;
                     return;
                 }
 
@@ -593,10 +620,22 @@
                 document.querySelector('meta[property="og:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
                 document.querySelector('meta[name="twitter:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
                 await renderGames(filteredGames, currentPage);
+                document.getElementById("links-grid").innerHTML = `
+                    <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
+                    <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
+                    <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
+                    <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
+                `;
             } catch (error) {
                 console.error("Error loading games:", error);
                 document.getElementById("games-grid").innerHTML = `
                     <p class="error-message skeleton">Failed to load games: ${error.message}</p>`;
+                document.getElementById("links-grid").innerHTML = `
+                    <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
+                    <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
+                    <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
+                    <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
+                `;
             }
         }
 

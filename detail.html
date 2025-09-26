@@ -710,16 +710,6 @@
             return { question: `${num1} + ${num2} = ?`, answer };
         }
 
-        // Preload image function
-        function preloadImage(url, fallback) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(url);
-                img.onerror = () => resolve(fallback);
-                img.src = url;
-            });
-        }
-
         // Search handler
         function handleSearch() {
             const query = document.getElementById("search-input").value.trim();
@@ -849,6 +839,7 @@
         }
 
         async function loadDetails() {
+            // Immediate placeholder
             document.getElementById("game-details-content").innerHTML = `
                 <div class="game-content">
                     <p class="loading">Loading game details...</p>
@@ -881,10 +872,14 @@
             }
 
             try {
+                // Fetch with timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
                 const root = await getProtoRoot();
                 const GameListMessage = root.lookupType("gamehub.GameList");
 
-                const response = await fetch('public/data/games.pb');
+                const response = await fetch('public/data/games.pb', { signal: controller.signal });
+                clearTimeout(timeoutId);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
                 }
@@ -904,11 +899,13 @@
                 const game = games[id];
                 document.title = `${game.title} - GameHub`;
                 const cleanDownload = game.download ? game.download.trim() : '#';
+                const thumbnailImage = game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover';
+                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
 
-                // Render basic details first
-                const math = generateMathQuestion();
+                // Render core content
                 document.getElementById("game-details-content").innerHTML = `
                     <div class="game-content">
+                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Game+Cover';">
                         <h1>${game.title}</h1>
                         <p><b>Developer:</b> ${game.developer}</p>
                         <p><b>Version:</b> ${game.version}</p>
@@ -916,39 +913,30 @@
                         <p><b>Language:</b> ${game.language}</p>
                         <p><b>Description:</b> ${game.description}</p>
                         <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                        <div class="download-section">
-                            <div class="math-challenge">
-                                <label for="math-answer">${math.question}</label>
-                                <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                <button id="verify-answer">Verify</button>
+                        ${galleryImages.length > 0 ? `
+                            <h3>Screenshots (${galleryImages.length})</h3>
+                            <div class="gallery">
+                                ${galleryImages.map((img, index) => `
+                                    <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
+                                `).join('')}
                             </div>
-                            <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
-                        </div>
+                        ` : ''}
                     </div>
                 `;
 
-                // Preload and append thumbnail
-                const thumbnailImage = await preloadImage(
-                    game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
-                    'https://via.placeholder.com/400x200?text=Game+Cover'
-                );
+                // Append math challenge after core content
+                const math = generateMathQuestion();
                 const gameContent = document.querySelector(".game-content");
-                gameContent.insertAdjacentHTML("afterbegin", `
-                    <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" loading="lazy">
-                `);
-
-                // Append gallery with lazy-loaded images
-                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
-                if (galleryImages.length > 0) {
-                    gameContent.insertAdjacentHTML("beforeend", `
-                        <h3>Screenshots (${galleryImages.length})</h3>
-                        <div class="gallery">
-                            ${galleryImages.map((img, index) => `
-                                <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x150?text=Game+Cover';" onclick="showModal('${img}')">
-                            `).join('')}
+                gameContent.insertAdjacentHTML("beforeend", `
+                    <div class="download-section">
+                        <div class="math-challenge">
+                            <label for="math-answer">${math.question}</label>
+                            <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
+                            <button id="verify-answer">Verify</button>
                         </div>
-                    `);
-                }
+                        <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
+                    </div>
+                `);
 
                 // Event listeners
                 document.getElementById("verify-answer").addEventListener("click", () => {

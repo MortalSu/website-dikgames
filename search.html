@@ -418,7 +418,7 @@
         <div class="games-grid" id="games-grid" role="grid">
             <div class="game-row" role="row">
                 <div class="game-card" role="gridcell" aria-labelledby="search-results">
-                    <a href="details.html?id=0&page=1&query=honey&from=search" aria-label="View details for Honey Village">
+                    <a href="detail.html?id=0&page=1&query=honey&from=search" aria-label="View details for Honey Village">
                         <img src="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80"
                              class="game-image lcp"
                              alt="Honey Village game cover"
@@ -615,7 +615,7 @@
                 const { src, srcset } = preloadedImages[index];
                 const isLcp = game.title.toLowerCase().includes("honey village") && index === 0;
                 gameCard.innerHTML = `
-                    <a href="details.html?id=${gameIndex}&page=${currentPage}&query=${encodeURIComponent(currentQuery)}&from=search" aria-label="View details for ${game.title}">
+                    <a href="detail.html?id=${gameIndex}&page=${currentPage}&query=${encodeURIComponent(currentQuery)}&from=search" aria-label="View details for ${game.title}">
                         <img src="${src}" 
                              class="game-image${isLcp ? ' lcp' : ''}" 
                              alt="${game.title} game cover" 
@@ -709,3 +709,4 @@
 </body>
 
 </html>
+

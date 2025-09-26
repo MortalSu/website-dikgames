@@ -26,7 +26,6 @@
     <link rel="preload" href="/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/AnonymousPro-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg" as="image">
-    <link rel="preload" href="https://via.placeholder.com/250x200?text=Game+Cover" as="image">
     <style>
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
@@ -48,7 +47,7 @@
                 url('/fonts/AnonymousPro-Regular.woff') format('woff');
             font-weight: 400;
             font-style: normal;
-            font-display: optional;
+            font-display: swap; /* Changed to swap to ensure smoother font loading */
         }
 
         @font-face {
@@ -57,7 +56,7 @@
                 url('/fonts/AnonymousPro-Bold.woff') format('woff');
             font-weight: 700;
             font-style: normal;
-            font-display: optional;
+            font-display: swap;
         }
 
         * {
@@ -163,6 +162,7 @@
         .tag-results-container,
         .links-container {
             margin: 0 clamp(2.5rem, 6vw, 3rem);
+            contain: layout; /* Prevent layout shifts */
         }
 
         .section-title {
@@ -306,7 +306,9 @@
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
-            min-height: 184px; /* Consistent height across breakpoints */
+            min-height: 184px;
+            width: 100%;
+            contain: layout; /* Prevent layout shifts */
         }
 
         .link-button {
@@ -388,27 +390,13 @@
             }
         }
 
-        @container (max-width: 768px) {
+        @media (max-width: 768px) {
             .links-grid {
                 grid-template-columns: repeat(2, 160px);
                 min-height: 184px;
-            }
-        }
-
-        @container (max-width: 480px) {
-            .links-grid {
-                grid-template-columns: 1fr;
-                min-height: 184px;
+                justify-content: center;
             }
 
-            .link-button {
-                width: 100%;
-                max-width: 160px;
-                margin: 0 auto;
-            }
-        }
-
-        @media (max-width: 768px) {
             .tag-results-container,
             .links-container {
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
@@ -435,6 +423,18 @@
         }
 
         @media (max-width: 480px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+                min-height: 184px;
+                justify-items: center;
+            }
+
+            .link-button {
+                width: 100%;
+                max-width: 160px;
+                margin: 0 auto;
+            }
+
             .tag-results-container,
             .links-container {
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
@@ -552,7 +552,10 @@
             return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = () => resolve({ src: url, srcset: `${url}?w=250&q=80 250w, ${url}?w=500&q=80 500w` });
-                img.onerror = () => resolve({ src: fallback, srcset: `${fallback}?w=250&q=80 250w, ${fallback}?w=500&q=80 500w` });
+                img.onerror = () => resolve({ 
+                    src: fallback, 
+                    srcset: `${fallback}?w=250&q=80 250w, ${fallback}?w=500&q=80 500w` 
+                });
                 img.src = url;
             });
         }
@@ -655,9 +658,10 @@
                 return;
             }
 
-            const imagePromises = paginatedGames.map((game, index) => {
-                const imageSrc = game.thumbnail || (game.images && game.images[0]) || "https://via.placeholder.com/250x200?text=Game+Cover";
-                return preloadImage(imageSrc, "https://via.placeholder.com/250x200?text=Game+Cover");
+            const fallbackImage = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=250&q=80";
+            const imagePromises = paginatedGames.map((game) => {
+                const imageSrc = game.thumbnail || (game.images && game.images[0]) || fallbackImage;
+                return preloadImage(imageSrc, fallbackImage);
             });
             const preloadedImages = await Promise.all(imagePromises);
             gamesGrid.innerHTML = '';
@@ -679,7 +683,7 @@
                              alt="${game.title} game cover" 
                              width="250" 
                              height="200"
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
+                             onerror="this.onerror=null; this.src='${fallbackImage}';" 
                              fetchpriority="high"
                              srcset="${srcset}"
                              sizes="(max-width: 600px) 250px, 500px">

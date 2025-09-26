@@ -225,6 +225,10 @@
             padding-bottom: 2rem;
         }
 
+        .game-row {
+            display: contents;
+        }
+
         .game-card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -405,11 +409,9 @@
             0% {
                 opacity: 0.6;
             }
-
             50% {
                 opacity: 1;
             }
-
             100% {
                 opacity: 0.6;
             }
@@ -489,15 +491,15 @@
             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                 alt="Exciting gaming scene showcasing new releases" loading="eager"
                 srcset="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80 600w, 
-                         https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w" sizes="(max-width: 600px) 600px, 1200px"
-                fetchpriority="high">
+                         https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
+                sizes="(max-width: 600px) 600px, 1200px" fetchpriority="high">
         </section>
         <section class="tags-link-container">
             <a href="tags.html" class="tags-link" aria-label="View all game tags">All Tags</a>
         </section>
         <section class="latest-games-container" aria-labelledby="latest-games">
             <h2 class="section-title" id="latest-games">Latest Updated Games</h2>
-            <div class="games-grid" id="games-grid" role="grid">
+            <div class="games-grid" id="games-grid" role="grid" aria-labelledby="latest-games">
                 <p class="loading skeleton">Loading games...</p>
             </div>
             <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
@@ -647,13 +649,13 @@
 
         async function renderGames(gameList, page = 1) {
             const gamesGrid = document.getElementById("games-grid");
-            gamesGrid.innerHTML = '<p class="loading skeleton">Loading games...</p>';
+            gamesGrid.innerHTML = '<p class="loading skeleton" role="status">Loading games...</p>';
             const start = (page - 1) * gamesPerPage;
             const end = start + gamesPerPage;
             const paginatedGames = gameList.slice(start, end);
 
             if (paginatedGames.length === 0) {
-                gamesGrid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton">No games found.</p>`;
+                gamesGrid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;" class="skeleton" role="status">No games found.</p>`;
                 renderPagination(gameList);
                 return;
             }
@@ -668,9 +670,12 @@
             // Batch DOM updates to avoid reflows
             const fragment = document.createDocumentFragment();
             paginatedGames.forEach((game, index) => {
-                const gameCard = document.createElement("article");
+                const gameRow = document.createElement("div");
+                gameRow.className = "game-row";
+                gameRow.setAttribute("role", "row");
+                const gameCard = document.createElement("div");
                 gameCard.className = "game-card";
-                gameCard.setAttribute("role", "article");
+                gameCard.setAttribute("role", "gridcell");
                 const gameIndex = allGames.findIndex(g => g.title === game.title && g.developer === game.developer);
                 if (gameIndex === -1) {
                     console.error(`Game index not found for ${game.title}`);
@@ -698,7 +703,8 @@
                         </div>
                     </a>
                 `;
-                fragment.appendChild(gameCard);
+                gameRow.appendChild(gameCard);
+                fragment.appendChild(gameRow);
             });
             gamesGrid.innerHTML = '';
             gamesGrid.appendChild(fragment);

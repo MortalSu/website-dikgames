@@ -47,7 +47,7 @@
                 url('/fonts/AnonymousPro-Regular.woff') format('woff');
             font-weight: 400;
             font-style: normal;
-            font-display: swap; /* Changed to swap to ensure smoother font loading */
+            font-display: swap;
         }
 
         @font-face {
@@ -159,10 +159,13 @@
             margin: 0 auto;
         }
 
-        .tag-results-container,
-        .links-container {
+        .tag-results-container {
             margin: 0 clamp(2.5rem, 6vw, 3rem);
-            contain: layout; /* Prevent layout shifts */
+            contain: layout;
+        }
+
+        .links-container {
+            margin: 2rem clamp(2.5rem, 6vw, 3rem);
         }
 
         .section-title {
@@ -301,14 +304,11 @@
         }
 
         .links-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 160px);
+            display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
-            min-height: 184px;
-            width: 100%;
-            contain: layout; /* Prevent layout shifts */
         }
 
         .link-button {
@@ -318,17 +318,8 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 0.9rem;
-            font-family: 'Anonymous Pro', 'Courier New', monospace;
-            font-weight: 400;
-            line-height: 1.2;
             transition: var(--transition);
             text-align: center;
-            width: 160px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
         }
 
         .link-button:hover {
@@ -391,12 +382,6 @@
         }
 
         @media (max-width: 768px) {
-            .links-grid {
-                grid-template-columns: repeat(2, 160px);
-                min-height: 184px;
-                justify-content: center;
-            }
-
             .tag-results-container,
             .links-container {
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
@@ -423,18 +408,6 @@
         }
 
         @media (max-width: 480px) {
-            .links-grid {
-                grid-template-columns: 1fr;
-                min-height: 184px;
-                justify-items: center;
-            }
-
-            .link-button {
-                width: 100%;
-                max-width: 160px;
-                margin: 0 auto;
-            }
-
             .tag-results-container,
             .links-container {
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
@@ -448,6 +421,11 @@
             .game-image,
             .skeleton-image {
                 height: 150px;
+            }
+
+            .link-button {
+                width: 100%;
+                padding: 0.75rem;
             }
         }
     </style>
@@ -492,7 +470,7 @@
         </section>
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
-            <div class="links-grid" id="links-grid">
+            <div class="links-grid">
                 <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
                 <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
                 <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
@@ -546,8 +524,6 @@
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
     <script defer>
-        // Note: To run this file, use a local web server (e.g., 'npx http-server' or VS Code Live Server)
-        // due to CORS restrictions with fetch requests.
         function preloadImage(url, fallback) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -751,12 +727,10 @@
             }
         });
 
-        // Debounce resize events to prevent rapid layout shifts
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                // Trigger any necessary layout updates
             }, 100);
         });
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Details - GameHub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.rel='stylesheet'"
         integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
         crossorigin="anonymous">
     <style>
@@ -131,6 +131,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 500px;
         }
 
         .game-content h1 {
@@ -163,6 +164,7 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             margin: 0 auto 20px;
+            aspect-ratio: 2 / 1;
         }
 
         .download-section {
@@ -259,6 +261,7 @@
             gap: 15px;
             width: 100%;
             max-width: 600px;
+            min-height: 150px;
         }
 
         .gallery h3 {
@@ -404,6 +407,17 @@
             color: var(--solid-primary);
         }
 
+        .skeleton {
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
         @media (max-width: 768px) {
 
             .game-details,
@@ -507,7 +521,24 @@
     <main>
         <section class="game-details" aria-labelledby="game-details">
             <h2 class="section-title" id="game-details">Game Details</h2>
-            <div id="game-details-content"></div>
+            <div id="game-details-content">
+                <div class="game-content">
+                    <h1 class="skeleton" style="height: 28px; width: 100%; max-width: 300px;"></h1>
+                    <div class="skeleton game-thumbnail" style="width: 100%; max-width: 400px; height: 200px;"></div>
+                    <h3 class="skeleton" style="height: 20px; width: 200px;"></h3>
+                    <div class="gallery skeleton" style="min-height: 150px; width: 100%; max-width: 600px;"></div>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <p class="skeleton" style="height: 15px; width: 100%; max-width: 600px; margin: 10px 0;"></p>
+                    <div class="download-section">
+                        <div class="math-challenge skeleton" style="height: 30px; width: 300px; margin-bottom: 15px;"></div>
+                        <a class="download-button skeleton" style="height: 40px; width: 150px; pointer-events: none; opacity: 1;"></a>
+                    </div>
+                </div>
+            </div>
         </section>
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
@@ -742,7 +773,7 @@
                     <h3>Screenshots (${preloadedGalleryImages.length})</h3>
                     <div class="gallery">
                         ${preloadedGalleryImages.map((img, index) => `
-                            <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')">
+                            <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')" width="180" height="150">
                         `).join('')}
                     </div>
                 ` : '';
@@ -751,7 +782,7 @@
                 document.getElementById("game-details-content").innerHTML = `
                     <div class="game-content">
                         <h1>${game.title}</h1>
-                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" loading="lazy">
+                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" width="400" height="200">
                         ${galleryHTML}
                         <p><b>Developer:</b> ${game.developer}</p>
                         <p><b>Version:</b> ${game.version}</p>

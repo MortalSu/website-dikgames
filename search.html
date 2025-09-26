@@ -18,6 +18,9 @@
     <meta name="twitter:description" content="Find games matching your search query on GameHub. Explore a variety of games and stay updated.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
     <link rel="canonical" href="https://gamehub.example.com/search.html">
+    <link rel="preload" href="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80" as="image" fetchpriority="high">
+    <link rel="preload" href="/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/AnonymousPro-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <style>
         :root {
             --primary-color: rgba(64, 196, 255, 0.6);
@@ -55,7 +58,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Anonymous Pro', monospace, sans-serif;
+            font-family: 'Anonymous Pro', monospace, 'Courier New', Courier, sans-serif;
         }
 
         body {
@@ -154,6 +157,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 400px;
         }
 
         .section-title {
@@ -163,6 +167,7 @@
             color: var(--text-white);
             border-bottom: 2px solid var(--solid-primary);
             margin-bottom: 1.5rem;
+            min-height: 48px;
         }
 
         .games-grid {
@@ -171,6 +176,7 @@
             gap: 1.5rem;
             padding-bottom: 2rem;
             width: 100%;
+            min-height: 300px;
         }
 
         .game-card {
@@ -192,7 +198,10 @@
             height: 200px;
             object-fit: cover;
             display: block;
-            loading: lazy;
+        }
+
+        .game-image.lcp {
+            fetchpriority: high;
         }
 
         .game-info {
@@ -226,9 +235,10 @@
         .pagination {
             display: flex;
             justify-content: center;
-            align-items: Electrochemical Impedance Spectroscopy (EIS) center;
+            align-items: center;
             gap: 0.75rem;
             padding: 1.5rem;
+            min-height: 50px;
         }
 
         .pagination button {
@@ -277,6 +287,7 @@
 
         .links-container {
             margin: 2rem clamp(2.5rem, 6vw, 3rem);
+            min-height: 120px;
         }
 
         .links-grid {
@@ -290,7 +301,7 @@
         .link-button {
             background-color: var(--primary-color);
             color: var(--text-white);
-            popup: 0.75rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 0.9rem;
@@ -308,6 +319,7 @@
             text-align: center;
             border-top: 1px solid var(--border-color);
             margin-top: 2rem;
+            min-height: 120px;
         }
 
         .footer-content {
@@ -400,7 +412,27 @@
     <section class="search-results-container" aria-labelledby="search-results">
         <h2 class="section-title" id="search-results">Games by Search</h2>
         <div class="games-grid" id="games-grid" role="grid">
-            <p class="loading">Loading search results...</p>
+            <article class="game-card" role="article">
+                <a href="details.html?id=0&page=1&query=honey&from=search" aria-label="View details for Honey Village">
+                    <img src="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80"
+                         class="game-image lcp"
+                         alt="Honey Village game cover"
+                         width="250"
+                         height="200"
+                         fetchpriority="high"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';"
+                         srcset="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=250&q=80 250w, https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80 500w"
+                         sizes="(max-width: 600px) 250px, 500px">
+                    <div class="game-info">
+                        <h3 class="game-title">Honey Village</h3>
+                        <div class="game-meta">
+                            <span>Unknown Developer</span>
+                            <span>1.0</span>
+                        </div>
+                        <p class="game-description">A relaxing village-building game with bees and honey...</p>
+                    </div>
+                </a>
+            </article>
         </div>
         <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
     </section>
@@ -571,13 +603,16 @@
                     return;
                 }
                 const { src, srcset } = preloadedImages[index];
+                const isLcp = game.title.toLowerCase().includes("honey village") && index === 0;
                 gameCard.innerHTML = `
                     <a href="details.html?id=${gameIndex}&page=${currentPage}&query=${encodeURIComponent(currentQuery)}&from=search" aria-label="View details for ${game.title}">
                         <img src="${src}" 
-                             class="game-image" 
+                             class="game-image${isLcp ? ' lcp' : ''}" 
                              alt="${game.title} game cover" 
+                             width="250"
+                             height="200"
+                             ${isLcp ? 'fetchpriority="high"' : 'loading="lazy"'}
                              onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';" 
-                             loading="lazy"
                              srcset="${srcset}"
                              sizes="(max-width: 600px) 250px, 500px">
                         <div class="game-info">

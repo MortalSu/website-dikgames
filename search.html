@@ -179,6 +179,10 @@
             min-height: 300px;
         }
 
+        .game-row {
+            display: contents;
+        }
+
         .game-card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -412,27 +416,29 @@
     <section class="search-results-container" aria-labelledby="search-results">
         <h2 class="section-title" id="search-results">Games by Search</h2>
         <div class="games-grid" id="games-grid" role="grid">
-            <article class="game-card" role="article">
-                <a href="details.html?id=0&page=1&query=honey&from=search" aria-label="View details for Honey Village">
-                    <img src="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80"
-                         class="game-image lcp"
-                         alt="Honey Village game cover"
-                         width="250"
-                         height="200"
-                         fetchpriority="high"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';"
-                         srcset="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=250&q=80 250w, https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80 500w"
-                         sizes="(max-width: 600px) 250px, 500px">
-                    <div class="game-info">
-                        <h3 class="game-title">Honey Village</h3>
-                        <div class="game-meta">
-                            <span>Unknown Developer</span>
-                            <span>1.0</span>
+            <div class="game-row" role="row">
+                <div class="game-card" role="gridcell" aria-labelledby="search-results">
+                    <a href="details.html?id=0&page=1&query=honey&from=search" aria-label="View details for Honey Village">
+                        <img src="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80"
+                             class="game-image lcp"
+                             alt="Honey Village game cover"
+                             width="250"
+                             height="200"
+                             fetchpriority="high"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/250x200?text=Game+Cover';"
+                             srcset="https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=250&q=80 250w, https://dikgames.pages.dev/images/honey_village_thumbnail.jpg?w=500&q=80 500w"
+                             sizes="(max-width: 600px) 250px, 500px">
+                        <div class="game-info">
+                            <h3 class="game-title">Honey Village</h3>
+                            <div class="game-meta">
+                                <span>Unknown Developer</span>
+                                <span>1.0</span>
+                            </div>
+                            <p class="game-description">A relaxing village-building game with bees and honey...</p>
                         </div>
-                        <p class="game-description">A relaxing village-building game with bees and honey...</p>
-                    </div>
-                </a>
-            </article>
+                    </a>
+                </div>
+            </div>
         </div>
         <nav class="pagination" aria-label="Pagination" id="pagination"></nav>
     </section>
@@ -594,9 +600,13 @@
             gamesGrid.innerHTML = '';
 
             paginatedGames.forEach((game, index) => {
-                const gameCard = document.createElement("article");
+                const gameRow = document.createElement("div");
+                gameRow.className = "game-row";
+                gameRow.setAttribute("role", "row");
+                const gameCard = document.createElement("div");
                 gameCard.className = "game-card";
-                gameCard.setAttribute("role", "article");
+                gameCard.setAttribute("role", "gridcell");
+                gameCard.setAttribute("aria-labelledby", "search-results");
                 const gameIndex = allGames.findIndex(g => g.title === game.title && g.developer === game.developer);
                 if (gameIndex === -1) {
                     console.error(`Game index not found for ${game.title}`);
@@ -625,7 +635,8 @@
                         </div>
                     </a>
                 `;
-                gamesGrid.appendChild(gameCard);
+                gameRow.appendChild(gameCard);
+                gamesGrid.appendChild(gameRow);
             });
 
             renderPagination(gameList);

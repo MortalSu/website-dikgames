@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,18 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="GameHub Team">
     <meta property="og:title" content="GameHub - Tag Results">
-    <meta property="og:description" content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:description"
+        content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
     <meta property="og:url" content="https://gamehub.example.com/tag-results.html">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="GameHub - Tag Results">
-    <meta name="twitter:description" content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:description"
+        content="Find games by specific tags on GameHub. Explore a variety of games and stay updated.">
+    <meta name="twitter:image"
+        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
     <link rel="canonical" href="https://gamehub.example.com/tag-results.html">
     <!-- <link rel="icon" type="image/png" href="path/to/your/favicon.png"> -->
     <link rel="preload" href="/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -40,7 +45,7 @@
         @font-face {
             font-family: 'Anonymous Pro';
             src: url('/fonts/AnonymousPro-Regular.woff2') format('woff2'),
-                 url('/fonts/AnonymousPro-Regular.woff') format('woff');
+                url('/fonts/AnonymousPro-Regular.woff') format('woff');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
@@ -49,7 +54,7 @@
         @font-face {
             font-family: 'Anonymous Pro';
             src: url('/fonts/AnonymousPro-Bold.woff2') format('woff2'),
-                 url('/fonts/AnonymousPro-Bold.woff') format('woff');
+                url('/fonts/AnonymousPro-Bold.woff') format('woff');
             font-weight: 700;
             font-style: normal;
             font-display: swap;
@@ -59,7 +64,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Anonymous Pro', monospace, sans-serif;
+            font-family: 'Anonymous Pro', 'Courier New', monospace, sans-serif;
         }
 
         body {
@@ -175,7 +180,7 @@
             gap: 1.5rem;
             padding-bottom: 2rem;
             width: 100%;
-            min-height: 360px; /* Reserve space for one row of cards */
+            min-height: 360px;
         }
 
         .game-card {
@@ -184,7 +189,7 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
             transition: var(--transition);
-            min-height: 300px; /* Consistent height for cards */
+            min-height: 300px;
         }
 
         .game-card:hover {
@@ -198,7 +203,7 @@
             height: 200px;
             object-fit: cover;
             display: block;
-            aspect-ratio: 5 / 4; /* Prevent CLS */
+            aspect-ratio: 5 / 4;
         }
 
         .game-image:not(:first-child) {
@@ -207,7 +212,7 @@
 
         .game-info {
             padding: 1rem;
-            min-height: 100px; /* Reserve space for text content */
+            min-height: 100px;
         }
 
         .game-title {
@@ -240,7 +245,7 @@
             align-items: center;
             gap: 0.75rem;
             padding: 1.5rem;
-            min-height: 50px; /* Prevent CLS */
+            min-height: 50px;
         }
 
         .pagination button {
@@ -271,13 +276,14 @@
             font-size: 0.9rem;
         }
 
-        .loading, .error-message {
+        .loading,
+        .error-message {
             text-align: center;
             color: var(--text-muted);
             font-size: 1rem;
             grid-column: 1 / -1;
             padding: 2rem;
-            min-height: 360px; /* Match games-grid height */
+            min-height: 360px;
         }
 
         .loading-grid {
@@ -285,7 +291,7 @@
             grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 25vw, 250px), 1fr));
             gap: 1.5rem;
             width: 100%;
-            min-height: 360px; /* Match games-grid height */
+            min-height: 360px;
         }
 
         .skeleton-card {
@@ -293,7 +299,7 @@
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            min-height: 300px; /* Match game-card height */
+            min-height: 300px;
             animation: pulse 1.5s infinite;
         }
 
@@ -312,12 +318,12 @@
         }
 
         .links-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 160px);
             gap: 1rem;
             justify-content: center;
             padding-bottom: 2rem;
-            min-height: 120px; /* Increased to accommodate stacked buttons */
+            min-height: 40px;
         }
 
         .link-button {
@@ -327,25 +333,22 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 0.9rem;
+            font-family: 'Anonymous Pro', 'Courier New', monospace, sans-serif;
+            font-weight: 400;
+            line-height: 1.2;
             transition: var(--transition);
             text-align: center;
-            min-width: 160px; /* Prevent shrinking */
-            height: 40px; /* Fixed height for consistency */
-            line-height: 1.2; /* Prevent text reflow */
+            width: 160px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         .link-button:hover {
             background-color: var(--secondary-color);
             border-color: var(--solid-primary);
-        }
-
-        .skeleton-link {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            min-width: 160px;
-            height: 40px;
-            animation: pulse 1.5s infinite;
         }
 
         footer {
@@ -391,9 +394,17 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
         }
 
         @media (max-width: 768px) {
@@ -402,11 +413,13 @@
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
             }
 
-            .games-grid, .loading-grid {
+            .games-grid,
+            .loading-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
 
-            .game-image, .skeleton-image {
+            .game-image,
+            .skeleton-image {
                 height: 180px;
             }
 
@@ -420,7 +433,8 @@
             }
 
             .links-grid {
-                min-height: 180px; /* Accommodate stacked buttons */
+                grid-template-columns: repeat(2, 160px);
+                min-height: 98px;
             }
         }
 
@@ -430,31 +444,30 @@
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
             }
 
-            .games-grid, .loading-grid {
+            .games-grid,
+            .loading-grid {
                 grid-template-columns: 1fr;
             }
 
-            .game-image, .skeleton-image {
+            .game-image,
+            .skeleton-image {
                 height: 150px;
             }
 
-            .link-button, .skeleton-link {
-                width: 100%;
-                min-width: unset;
-                padding: 0.75rem;
-            }
-
             .links-grid {
-                min-height: 240px; /* Accommodate four stacked buttons */
+                grid-template-columns: 1fr;
+                min-height: 184px;
             }
 
-            .social-links svg {
-                width: 18px;
-                height: 18px;
+            .link-button {
+                width: 100%;
+                max-width: 160px;
+                margin: 0 auto;
             }
         }
     </style>
 </head>
+
 <body>
     <header class="top-bar" role="banner">
         <a href="index.html" class="logo" id="logo-link" aria-label="GameHub Home">GameHub</a>
@@ -462,7 +475,8 @@
             <input type="text" id="search-input" placeholder="Search games..." aria-label="Search for games">
             <button id="search-button" aria-label="Search">
                 <svg viewBox="0 0 512 512" aria-hidden="true">
-                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z" />
+                    <path
+                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z" />
                 </svg>
             </button>
         </div>
@@ -494,10 +508,10 @@
         <section class="links-container" aria-labelledby="links-section">
             <h2 class="section-title" id="links-section">Explore More</h2>
             <div class="links-grid" id="links-grid">
-                <div class="skeleton-link skeleton"></div>
-                <div class="skeleton-link skeleton"></div>
-                <div class="skeleton-link skeleton"></div>
-                <div class="skeleton-link skeleton"></div>
+                <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
+                <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
+                <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
+                <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
             </div>
         </section>
     </main>
@@ -507,22 +521,26 @@
             <div class="social-links">
                 <a href="https://twitter.com/gamehub" aria-label="Follow GameHub on Twitter">
                     <svg viewBox="0 0 512 512" aria-hidden="true">
-                        <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
+                        <path
+                            d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
                     </svg>
                 </a>
                 <a href="https://facebook.com/gamehub" aria-label="Follow GameHub on Facebook">
                     <svg viewBox="0 0 512 512" aria-hidden="true">
-                        <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z" />
+                        <path
+                            d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z" />
                     </svg>
                 </a>
                 <a href="https://instagram.com/gamehub" aria-label="Follow GameHub on Instagram">
                     <svg viewBox="0 0 448 512" aria-hidden="true">
-                        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.8 9.9 67.6 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                        <path
+                            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.8 9.9 67.6 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
                     </svg>
                 </a>
                 <a href="https://discord.gg/gamehub" aria-label="Join GameHub on Discord">
                     <svg viewBox="0 0 640 512" aria-hidden="true">
-                        <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C621.685,294.736,600.805,183.683,524.531,69.836ZM351.176,352.332c-29.825,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.938,0,54.563,26.337,54.563,58.668S381.114,352.332,351.176,352.332Zm-134.646,0c-29.938,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.825,0,54.563,26.337,54.563,58.668S246.177,352.332,216.53,352.332Z" />
+                        <path
+                            d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C621.685,294.736,600.805,183.683,524.531,69.836ZM351.176,352.332c-29.825,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.938,0,54.563,26.337,54.563,58.668S381.114,352.332,351.176,352.332Zm-134.646,0c-29.938,0-54.563-26.337-54.563-58.668s24.548-58.668,54.563-58.668c29.825,0,54.563,26.337,54.563,58.668S246.177,352.332,216.53,352.332Z" />
                     </svg>
                 </a>
             </div>
@@ -541,8 +559,8 @@
         }
     }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
-    <script>
+    <script defer src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
+    <script defer>
         // Note: To run this file, use a local web server (e.g., 'npx http-server' or VS Code Live Server)
         // due to CORS restrictions with fetch requests.
         function preloadImage(url, fallback) {
@@ -601,13 +619,7 @@
 
                 if (allGames.length === 0) {
                     document.getElementById("games-grid").innerHTML = `
-                        <p class="error-message skeleton">No games available.</p>`;
-                    document.getElementById("links-grid").innerHTML = `
-                        <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
-                        <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
-                        <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
-                        <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
-                    `;
+                        <p class="error-message">No games available.</p>`;
                     return;
                 }
 
@@ -620,22 +632,10 @@
                 document.querySelector('meta[property="og:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
                 document.querySelector('meta[name="twitter:description"]').setAttribute('content', `Find ${filteredGames.length} games tagged "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}" on GameHub.`);
                 await renderGames(filteredGames, currentPage);
-                document.getElementById("links-grid").innerHTML = `
-                    <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
-                    <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
-                    <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
-                    <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
-                `;
             } catch (error) {
                 console.error("Error loading games:", error);
                 document.getElementById("games-grid").innerHTML = `
-                    <p class="error-message skeleton">Failed to load games: ${error.message}</p>`;
-                document.getElementById("links-grid").innerHTML = `
-                    <a href="/browse-all" class="link-button" aria-label="Browse all video games">Browse All Video Games</a>
-                    <a href="/top-rated" class="link-button" aria-label="View top rated video games">Top Rated Games</a>
-                    <a href="/new-releases" class="link-button" aria-label="View new game releases">New Game Releases</a>
-                    <a href="/contact" class="link-button" aria-label="Contact GameHub support">Contact Support</a>
-                `;
+                    <p class="error-message">Failed to load games: ${error.message}</p>`;
             }
         }
 
@@ -665,7 +665,7 @@
             const paginatedGames = gameList.slice(start, end);
 
             if (paginatedGames.length === 0) {
-                gamesGrid.innerHTML = `<p class="error-message skeleton">No games found for tag "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}".</p>`;
+                gamesGrid.innerHTML = `<p class="error-message">No games found for tag "${currentTag ? currentTag.charAt(0).toUpperCase() + currentTag.slice(1) : 'All'}".</p>`;
                 renderPagination(gameList);
                 return;
             }
@@ -766,4 +766,5 @@
         window.onload = fetchGames;
     </script>
 </body>
+
 </html>

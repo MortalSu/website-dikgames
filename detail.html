@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -134,7 +135,7 @@
             min-height: 500px;
         }
 
-        .game-content h1 {
+        .game-content h2 {
             font-size: 28px;
             margin-bottom: 15px;
             color: var(--text-white);
@@ -419,7 +420,6 @@
         }
 
         @media (max-width: 768px) {
-
             .game-details,
             .links-container {
                 margin: 0 clamp(2rem, 5vw, 2.5rem);
@@ -461,7 +461,6 @@
         }
 
         @media (max-width: 480px) {
-
             .game-details,
             .links-container {
                 margin: 0 clamp(1.5rem, 4vw, 2rem);
@@ -471,7 +470,7 @@
                 padding: 20px;
             }
 
-            .game-content h1,
+            .game-content h2,
             .game-content p,
             .download-section {
                 max-width: 100%;
@@ -523,7 +522,7 @@
             <h2 class="section-title" id="game-details">Game Details</h2>
             <div id="game-details-content">
                 <div class="game-content">
-                    <h1 class="skeleton" style="height: 28px; width: 100%; max-width: 300px;"></h1>
+                    <h2 class="skeleton" style="height: 28px; width: 100%; max-width: 300px;"></h2>
                     <div class="skeleton game-thumbnail" style="width: 100%; max-width: 400px; height: 200px;"></div>
                     <h3 class="skeleton" style="height: 20px; width: 200px;"></h3>
                     <div class="gallery skeleton" style="min-height: 150px; width: 100%; max-width: 600px;"></div>
@@ -560,12 +559,9 @@
         <div class="footer-content">
             <p>GameHub &copy; 2025. Your ultimate platform for gaming news, updates, and downloads.</p>
             <div class="social-links">
-                <a href="https://twitter.com/gamehub" aria-label="Follow us on Twitter"><i
-                        class="fab fa-twitter"></i></a>
-                <a href="https://facebook.com/gamehub" aria-label="Follow us on Facebook"><i
-                        class="fab fa-facebook"></i></a>
-                <a href="https://instagram.com/gamehub" aria-label="Follow us on Instagram"><i
-                        class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/gamehub" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://facebook.com/gamehub" aria-label="Follow us on Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://instagram.com/gamehub" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="https://discord.gg/gamehub" aria-label="Join our Discord"><i class="fab fa-discord"></i></a>
             </div>
         </div>
@@ -781,7 +777,7 @@
                 const math = generateMathQuestion();
                 document.getElementById("game-details-content").innerHTML = `
                     <div class="game-content">
-                        <h1>${game.title}</h1>
+                        <h2>${game.title}</h2>
                         <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} thumbnail" width="400" height="200">
                         ${galleryHTML}
                         <p><b>Developer:</b> ${game.developer}</p>
@@ -848,3 +844,4 @@
 </body>
 
 </html>
+```

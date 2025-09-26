@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0, minimum-scale=1.0">
+    <title>Game Details - GameHub</title>
+    <meta name="description"
+        content="View details for games on GameHub, including developer, version, and screenshots.">
+    <meta name="keywords" content="games, gaming platform, video games, GameHub, game details">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="GameHub Team">
+    <meta property="og:title" content="Game Details - GameHub">
+    <meta property="og:description" content="Explore detailed information about your favorite games on GameHub.">
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://gamehub.example.com/detail.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://gamehub.example.com/detail.html">
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32/40c4ff/ffffff?text=GH">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: rgba(64, 196, 255, 0.6);
+            --secondary-color: rgba(2, 136, 209, 0.8);
+            --solid-primary: #40c4ff;
+            --bg-dark: #000000;
+            --card-bg: #1a1a1a;
+            --border-color: rgba(255, 255, 255, 0.4);
+            --text-white: #ffffff;
+            --text-muted: #cccccc;
+            --cloud-glow: rgba(255, 255, 255, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            font-size: clamp(16px, 2vw, 18px);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--solid-primary);
+            outline-offset: 2px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 3vw, 1.75rem);
+            font-weight: 700;
+            color: var(--solid-primary);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .search-bar input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px 0 0 20px;
+            background-color: var(--card-bg);
+            color: var(--text-white);
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--solid-primary);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-bar button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0 20px 20px 0;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+            font-size: 0.9rem;
+        }
+
+        .search-bar button:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        .search-bar button i {
+            color: var(--text-white);
+        }
+
+        .banner {
+            margin: 2rem clamp(2rem, 5vw, 2.5rem);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 16 / 9;
+            loading: eager;
+        }
+
+        .tags-link-container {
+            margin: 1rem clamp(2.5rem, 6vw, 3rem);
+            text-align: center;
+        }
+
+        .tags-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+        }
+
+        .tags-link:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        main {
+            background-color: var(--bg-dark);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .game-details,
+        .links-container {
+            margin: 0 clamp(2.5rem, 6vw, 3rem);
+        }
+
+        .section-title {
+            padding: 2rem 0 1rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--text-white);
+            border-bottom: 2px solid var(--solid-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .game-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-content h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--text-white);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-content p {
+            margin: 10px 0;
+            font-size: 15px;
+            color: var(--text-muted);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .game-content b {
+            color: var(--solid-primary);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            object-fit: cover;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 0 auto 20px;
+        }
+
+        .download-section {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .math-challenge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .math-challenge label {
+            color: var(--text-white);
+            font-size: 15px;
+        }
+
+        .math-challenge input {
+            padding: 5px;
+            width: 60px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-white);
+            font-size: 14px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .math-challenge button {
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            padding: 5px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+        }
+
+        .math-challenge button:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        .download-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .download-button.active {
+            pointer-events: auto;
+            opacity: 1;
+            aria-disabled: false;
+        }
+
+        .download-button:hover.active {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        .tag-button {
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: var(--text-white);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-transform: capitalize;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+        }
+
+        .tag-button:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        .gallery {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            justify-content: center;
+        }
+
+        .gallery h3 {
+            grid-column: 1 / -1;
+            text-align: left;
+            margin-bottom: 10px;
+            color: var(--text-white);
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            loading: lazy;
+            cursor: pointer;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.03);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            touch-action: none;
+        }
+
+        .modal-image-container {
+            position: relative;
+            overflow: hidden;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+        }
+
+        .modal-image-container:active {
+            cursor: grabbing;
+        }
+
+        .modal img {
+            max-width: none;
+            max-height: none;
+            width: auto;
+            height: auto;
+            transform-origin: 0 0;
+            transition: transform 0.2s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+        }
+
+        .modal-close:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
+        }
+
+        .links-container {
+            margin: 2rem clamp(2.5rem, 6vw, 3rem);
+        }
+
+        .section-title {
+            padding: 2rem 0 1rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: #ffffff;
+            border-bottom: 2px solid #40c4ff;
+            margin-bottom: 1.5rem;
+        }
+
+        .links-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            padding-bottom: 2rem;
+        }
+
+        .link-button {
+            background-color: rgba(64, 196, 255, 0.6);
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .link-button:hover {
+            background-color: rgba(2, 136, 209, 0.8);
+            border-color: #40c4ff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            background-color: var(--bg-dark);
+            padding: 2rem clamp(2rem, 5vw, 2.5rem);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            color: var(--text-white);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-white);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--solid-primary);
+        }
+
+        @media (max-width: 768px) {
+
+            .game-details,
+            .links-container {
+                margin: 0 clamp(2rem, 5vw, 2.5rem);
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                max-width: 500px;
+            }
+
+            .gallery img {
+                height: 120px;
+            }
+
+            .game-thumbnail {
+                max-width: 300px;
+                height: auto;
+            }
+
+            .modal-image-container {
+                max-width: 95vw;
+                max-height: 80vh;
+            }
+
+            .modal-close {
+                top: 15px;
+                right: 15px;
+                width: 35px;
+                height: 35px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .game-details,
+            .links-container {
+                margin: 0 clamp(1.5rem, 4vw, 2rem);
+            }
+
+            #game-details {
+                margin: 15px 10px;
+            }
+
+            .game-content {
+                padding: 20px;
+            }
+
+            .game-content h1,
+            .game-content p,
+            .download-section {
+                max-width: 100%;
+            }
+
+            .game-thumbnail {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                max-width: 100%;
+            }
+
+            .gallery img {
+                height: 100px;
+            }
+
+            .modal-image-container {
+                max-width: 98vw;
+                max-height: 75vh;
+            }
+
+            .modal-close {
+                top: 10px;
+                right: 10px;
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+
+            .banner {
+                margin: 0.5rem clamp(1rem, 3vw, 1.5rem);
+            }
+
+            .tags-link-container {
+                margin: 0 clamp(1.5rem, 4vw, 2rem);
+            }
+
+            .link-button {
+                width: 100%;
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top-bar" role="banner">
+        <a href="index.html" class="logo" id="logo-link" aria-label="GameHub Home">GameHub</a>
+        <div class="search-bar" role="search">
+            <input type="text" id="search-input" placeholder="Search games..." aria-label="Search for games">
+            <button id="search-button" aria-label="Search"><i class="fas fa-magnifying-glass"></i></button>
+        </div>
+    </header>
+    <main>
+        <section class="game-details" aria-labelledby="game-details">
+            <h2 class="section-title" id="game-details">Game Details</h2>
+            <div id="game-details-content"></div>
+        </section>
+        <section class="links-container" aria-labelledby="links-section">
+            <h2 class="section-title" id="links-section">Explore More</h2>
+            <div class="links-grid">
+                <a href="/browse-all" class="link-button" aria-label="Browse all games">Browse All Games</a>
+                <a href="/top-rated" class="link-button" aria-label="View top rated games">Top Rated</a>
+                <a href="/new-releases" class="link-button" aria-label="View new releases">New Releases</a>
+                <a href="/contact" class="link-button" aria-label="Contact us">Contact Us</a>
+            </div>
+        </section>
+        <div id="image-modal" class="modal">
+            <div class="modal-image-container" id="modal-image-container">
+                <img id="modal-image" src="" alt="Large screenshot">
+            </div>
+            <button class="modal-close" id="modal-close" aria-label="Close image"><i class="fas fa-times"></i></button>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <p>GameHub &copy; 2025. Your ultimate platform for gaming news, updates, and downloads.</p>
+            <div class="social-links">
+                <a href="https://twitter.com/gamehub" aria-label="Follow us on Twitter"><i
+                        class="fab fa-twitter"></i></a>
+                <a href="https://facebook.com/gamehub" aria-label="Follow us on Facebook"><i
+                        class="fab fa-facebook"></i></a>
+                <a href="https://instagram.com/gamehub" aria-label="Follow us on Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://discord.gg/gamehub" aria-label="Join our Discord"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Game Details - GameHub",
+        "url": "https://gamehub.example.com/detail.html",
+        "description": "Detailed information about a specific game on GameHub."
+    }
+    </script>
+    <script>
+        // Generate random math question
+        function generateMathQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const answer = num1 + num2;
+            return { question: `${num1} + ${num2} = ?`, answer };
+        }
+
+        // Preload image function to ensure valid images
+        function preloadImage(url, fallback) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(url);
+                img.onerror = () => resolve(fallback);
+                img.src = url;
+            });
+        }
+
+        // Search handler function
+        function handleSearch() {
+            const query = document.getElementById("search-input").value.trim();
+            if (query) {
+                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Modal zoom and pan functionality
+        function initializeModalZoom() {
+            const modal = document.getElementById("image-modal");
+            const modalImage = document.getElementById("modal-image");
+            const modalImageContainer = document.getElementById("modal-image-container");
+
+            let scale = 1;
+            let translateX = 0;
+            let translateY = 0;
+            let isDragging = false;
+            let startX = 0;
+            let startY = 0;
+            let pinchStartDistance = 0;
+
+            function updateTransform() {
+                modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+            }
+
+            // Mouse wheel zoom for PC
+            modalImageContainer.addEventListener("wheel", (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                const newScale = Math.min(Math.max(scale + delta, 1), 5);
+                if (newScale !== scale) {
+                    scale = newScale;
+                    updateTransform();
+                    console.log(`Zoomed to scale: ${scale}`);
+                }
+            });
+
+            // Mouse drag for PC
+            modalImageContainer.addEventListener("mousedown", (e) => {
+                if (scale <= 1) return;
+                isDragging = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                modalImageContainer.style.cursor = "grabbing";
+            });
+
+            modalImageContainer.addEventListener("mousemove", (e) => {
+                if (!isDragging) return;
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+                console.log(`Panned to: (${translateX}, ${translateY})`);
+            });
+
+            modalImageContainer.addEventListener("mouseup", () => {
+                isDragging = false;
+                modalImageContainer.style.cursor = "grab";
+            });
+
+            modalImageContainer.addEventListener("mouseleave", () => {
+                isDragging = false;
+                modalImageContainer.style.cursor = "grab";
+            });
+
+            // Touch events for Android
+            modalImageContainer.addEventListener("touchstart", (e) => {
+                if (e.touches.length === 1) {
+                    if (scale <= 1) return;
+                    isDragging = true;
+                    startX = e.touches[0].clientX - translateX;
+                    startY = e.touches[0].clientY - translateY;
+                } else if (e.touches.length === 2) {
+                    isDragging = false;
+                    const dx = e.touches[0].clientX - e.touches[1].clientX;
+                    const dy = e.touches[0].clientY - e.touches[1].clientY;
+                    pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
+                }
+            });
+
+            modalImageContainer.addEventListener("touchmove", (e) => {
+                e.preventDefault();
+                if (isDragging && e.touches.length === 1) {
+                    translateX = e.touches[0].clientX - startX;
+                    translateY = e.touches[0].clientY - startY;
+                    updateTransform();
+                    console.log(`Panned to: (${translateX}, ${translateY})`);
+                } else if (e.touches.length === 2) {
+                    const dx = e.touches[0].clientX - e.touches[1].clientX;
+                    const dy = e.touches[0].clientY - e.touches[1].clientY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const newScale = Math.min(Math.max(scale * (distance / pinchStartDistance), 1), 5);
+                    if (newScale !== scale) {
+                        scale = newScale;
+                        pinchStartDistance = distance;
+                        updateTransform();
+                        console.log(`Pinch zoomed to scale: ${scale}`);
+                    }
+                }
+            });
+
+            modalImageContainer.addEventListener("touchend", () => {
+                isDragging = false;
+                pinchStartDistance = 0;
+            });
+
+            // Double-tap to reset zoom
+            modalImageContainer.addEventListener("dblclick", () => {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
+                console.log("Zoom reset via double-tap/click");
+            });
+
+            modalImageContainer.addEventListener("touchstart", (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                    if (target === modalImage) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+        // Show modal with large image
+        function showModal(imageSrc) {
+            console.log(`Opening modal with image: ${imageSrc}`);
+            const modal = document.getElementById("image-modal");
+            const modalImage = document.getElementById("modal-image");
+            modalImage.src = imageSrc;
+            modalImage.alt = "Large screenshot";
+            modal.style.display = "flex";
+            // Reset zoom and pan
+            modalImage.style.transform = "scale(1) translate(0px, 0px)";
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById("image-modal");
+            modal.style.display = "none";
+            console.log("Modal closed");
+        }
+
+        async function loadDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+            const page = params.get("page") || "1";
+            const query = params.get("query") || "";
+            const tag = params.get("tag") || "";
+            const from = params.get("from") || "index";
+
+            // Update logo link based on 'from' parameter
+            const logoLink = document.getElementById("logo-link");
+            if (from === "search" && query) {
+                logoLink.href = `search.html?page=${page}&query=${encodeURIComponent(query)}`;
+            } else if (from === "tag-results" && tag) {
+                logoLink.href = `tag-results.html?page=${page}&tag=${encodeURIComponent(tag)}`;
+            } else {
+                logoLink.href = `index.html?page=${page}`;
+            }
+
+            if (id === null || isNaN(id) || id < 0) {
+                document.getElementById("game-details-content").innerHTML = `
+                    <div class="game-content">
+                        <p class="error-message">Invalid game ID: ${id}</p>
+                    </div>
+                `;
+                console.error(`Invalid game ID: ${id}`);
+                return;
+            }
+
+            try {
+                // Fetch game details from Worker
+                const response = await fetch(`/api/game-details?id=${id}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch game details: ${response.statusText}`);
+                }
+                const game = await response.json();
+
+                console.log(`Game: ${game.title}, Thumbnail: ${game.thumbnail}, Images: ${JSON.stringify(game.images)}, Image Count: ${game.images ? game.images.length : 0}`);
+                document.title = `${game.title} - GameHub`;
+                const cleanDownload = game.download ? game.download.trim() : '#';
+                const thumbnailImage = await preloadImage(
+                    game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
+                    'https://via.placeholder.com/400x200?text=Game+Cover'
+                );
+                // Use all images except the thumbnail (if thumbnail is in images)
+                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
+                const preloadedGalleryImages = await Promise.all(
+                    galleryImages.map(img => preloadImage(img, 'https://via.placeholder.com/200x150?text=Game+Cover'))
+                );
+                let galleryHTML = '';
+                if (preloadedGalleryImages.length > 0) {
+                    galleryHTML = `
+                        <h3>Screenshots (${preloadedGalleryImages.length})</h3>
+                        <div class="gallery">
+                            ${preloadedGalleryImages.map((img, index) => `
+                                <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')">
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                const math = generateMathQuestion();
+                document.getElementById("game-details-content").innerHTML = `
+                    <div class="game-content">
+                        <h1>${game.title}</h1>
+                        <img src="${thumbnailImage}" class="game-thumbnail" 
+                             alt="${game.title} thumbnail" loading="lazy">
+                        ${galleryHTML}
+                        <p><b>Developer:</b> ${game.developer}</p>
+                        <p><b>Version:</b> ${game.version}</p>
+                        <p><b>Status:</b> ${game.status}</p>
+                        <p><b>Language:</b> ${game.language}</p>
+                        <p><b>Description:</b> ${game.description}</p>
+                        <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
+                        <div class="download-section">
+                            <div class="math-challenge">
+                                <label for="math-answer">${math.question}</label>
+                                <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
+                                <button id="verify-answer">Verify</button>
+                            </div>
+                            <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download Game</a>
+                        </div>
+                    </div>
+                `;
+
+                // Handle math challenge
+                document.getElementById("verify-answer").addEventListener("click", () => {
+                    const userAnswer = parseInt(document.getElementById("math-answer").value);
+                    const downloadLink = document.getElementById("download-link");
+                    if (userAnswer === math.answer) {
+                        downloadLink.classList.add("active");
+                        downloadLink.setAttribute("aria-disabled", "false");
+                    } else {
+                        alert("Incorrect answer. Please try again.");
+                        document.getElementById("math-answer").value = "";
+                    }
+                });
+
+                // Allow Enter key to submit math answer
+                document.getElementById("math-answer").addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        document.getElementById("verify-answer").click();
+                    }
+                });
+
+                // Search button handler
+                document.getElementById("search-button").addEventListener("click", handleSearch);
+
+                // Search on Enter key
+                document.getElementById("search-input").addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        handleSearch();
+                    }
+                });
+
+                // Modal close handler
+                document.getElementById("modal-close").addEventListener("click", closeModal);
+
+                // Close modal when clicking outside the image
+                document.getElementById("image-modal").addEventListener("click", (e) => {
+                    if (e.target === document.getElementById("image-modal")) {
+                        closeModal();
+                    }
+                });
+
+                // Initialize zoom and pan
+                initializeModalZoom();
+            } catch (error) {
+                console.error("Error loading game details:", error);
+                document.getElementById("game-details-content").innerHTML = `
+                    <div class="game-content">
+                        <p class="error-message">
+                            Failed to load game details: ${error.message}
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        window.onload = loadDetails;
+    </script>
+</body>
+
+</html>

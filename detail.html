@@ -710,313 +710,315 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
     <script>
-        function generateMathQuestion() {
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            return { question: `${num1} + ${num2} = ?`, answer: num1 + num2 };
-        }
+function generateMathQuestion() {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    return { question: `${num1} + ${num2} = ?`, answer: num1 + num2 };
+}
 
-        function preloadImage(url, fallback) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(url);
-                img.onerror = () => resolve(fallback);
-                img.src = url;
-            });
-        }
+function preloadImage(url, fallback) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(url);
+        img.onerror = () => resolve(fallback);
+        img.src = url;
+    });
+}
 
-        function handleSearch() {
-            const query = document.getElementById("search-input").value.trim();
-            if (query) {
-                window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+function handleSearch() {
+    const query = document.getElementById("search-input").value.trim();
+    if (query) {
+        window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+    }
+}
+
+function initializeModalZoom() {
+    const modal = document.getElementById("image-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalImageContainer = document.getElementById("modal-image-container");
+    let scale = 1, translateX = 0, translateY = 0, isDragging = false, startX = 0, startY = 0, pinchStartDistance = 0;
+
+    function updateTransform() {
+        modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+    }
+
+    modalImageContainer.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        scale = Math.min(Math.max(scale + delta, 1), 5);
+        updateTransform();
+    }, { passive: true });
+
+    modalImageContainer.addEventListener("mousedown", (e) => {
+        if (scale <= 1) return;
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        modalImageContainer.style.cursor = "grabbing";
+    });
+
+    modalImageContainer.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        updateTransform();
+    });
+
+    modalImageContainer.addEventListener("mouseup", () => {
+        isDragging = false;
+        modalImageContainer.style.cursor = "grab";
+    });
+
+    modalImageContainer.addEventListener("mouseleave", () => {
+        isDragging = false;
+        modalImageContainer.style.cursor = "grab";
+    });
+
+    modalImageContainer.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1) {
+            if (scale <= 1) return;
+            isDragging = true;
+            startX = e.touches[0].clientX - translateX;
+            startY = e.touches[0].clientY - translateY;
+        } else if (e.touches.length === 2) {
+            isDragging = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
+        }
+    }, { passive: true });
+
+    modalImageContainer.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        if (isDragging && e.touches.length === 1) {
+            translateX = e.touches[0].clientX - startX;
+            translateY = e.touches[0].clientY - startY;
+            updateTransform();
+        } else if (e.touches.length === 2) {
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            scale = Math.min(Math.max(scale * (distance / pinchStartDistance), 1), 5);
+            pinchStartDistance = distance;
+            updateTransform();
+        }
+    }, { passive: true });
+
+    modalImageContainer.addEventListener("touchend", () => {
+        isDragging = false;
+        pinchStartDistance = 0;
+    });
+
+    modalImageContainer.addEventListener("dblclick", () => {
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+        updateTransform();
+    });
+}
+
+function showModal(imageSrc) {
+    const modal = document.getElementById("image-modal");
+    const modalImage = document.getElementById("modal-image");
+    modalImage.src = imageSrc;
+    modalImage.alt = "Large game screenshot";
+    modal.style.display = "flex";
+    modalImage.style.transform = "scale(1) translate(0px, 0px)";
+}
+
+function closeModal() {
+    document.getElementById("image-modal").style.display = "none";
+}
+
+async function loadDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const page = params.get("page") || "1";
+    const query = params.get("query") || "";
+    const tag = params.get("tag") || "";
+    const from = params.get("from") || "index";
+
+    const logoLink = document.getElementById("logo-link");
+    if (from === "search" && query) {
+        logoLink.href = `search.html?page=${page}&query=${encodeURIComponent(query)}`;
+    } else if (from === "tag-results" && tag) {
+        logoLink.href = `tag-results.html?page=${page}&tag=${encodeURIComponent(tag)}`;
+    } else {
+        logoLink.href = `index.html?page=${page}`;
+    }
+
+    if (id === null || isNaN(id) || id < 0) {
+        document.getElementById("game-details-content").innerHTML = `
+            <div class="game-content">
+                <p class="error-message">Invalid game ID: ${id}</p>
+            </div>
+        `;
+        return;
+    }
+
+    const gameId = parseInt(id, 10);
+    try {
+        const protoContent = `
+            syntax = "proto3";
+            package gamehub;
+            message Game {
+                string title = 1;
+                string developer = 2;
+                string version = 3;
+                string status = 4;
+                repeated string tags = 5;
+                string description = 6;
+                string download = 7;
+                string language = 8;
+                repeated string images = 9;
+                string thumbnail = 10;
             }
-        }
-
-        function initializeModalZoom() {
-            const modal = document.getElementById("image-modal");
-            const modalImage = document.getElementById("modal-image");
-            const modalImageContainer = document.getElementById("modal-image-container");
-            let scale = 1, translateX = 0, translateY = 0, isDragging = false, startX = 0, startY = 0, pinchStartDistance = 0;
-
-            function updateTransform() {
-                modalImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+            message GameList {
+                repeated Game games = 1;
             }
+        `;
+        const root = await protobuf.parse(protoContent, { keepCase: true }).root;
+        const GameListMessage = root.lookupType("gamehub.GameList");
+        const response = await fetch('public/data/games.pb');
+        if (!response.ok) {
+            throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
+        }
+        const protoBinaryData = new Uint8Array(await response.arrayBuffer());
+        const message = GameListMessage.decode(protoBinaryData);
+        const games = message.games;
 
-            modalImageContainer.addEventListener("wheel", (e) => {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                scale = Math.min(Math.max(scale + delta, 1), 5);
-                updateTransform();
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("mousedown", (e) => {
-                if (scale <= 1) return;
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-                modalImageContainer.style.cursor = "grabbing";
-            });
-
-            modalImageContainer.addEventListener("mousemove", (e) => {
-                if (!isDragging) return;
-                translateX = e.clientX - startX;
-                translateY = e.clientY - startY;
-                updateTransform();
-            });
-
-            modalImageContainer.addEventListener("mouseup", () => {
-                isDragging = false;
-                modalImageContainer.style.cursor = "grab";
-            });
-
-            modalImageContainer.addEventListener("mouseleave", () => {
-                isDragging = false;
-                modalImageContainer.style.cursor = "grab";
-            });
-
-            modalImageContainer.addEventListener("touchstart", (e) => {
-                if (e.touches.length === 1) {
-                    if (scale <= 1) return;
-                    isDragging = true;
-                    startX = e.touches[0].clientX - translateX;
-                    startY = e.touches[0].clientY - translateY;
-                } else if (e.touches.length === 2) {
-                    isDragging = false;
-                    const dx = e.touches[0].clientX - e.touches[1].clientX;
-                    const dy = e.touches[0].clientY - e.touches[1].clientY;
-                    pinchStartDistance = Math.sqrt(dx * dx + dy * dy);
-                }
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("touchmove", (e) => {
-                e.preventDefault();
-                if (isDragging && e.touches.length === 1) {
-                    translateX = e.touches[0].clientX - startX;
-                    translateY = e.touches[0].clientY - startY;
-                    updateTransform();
-                } else if (e.touches.length === 2) {
-                    const dx = e.touches[0].clientX - e.touches[1].clientX;
-                    const dy = e.touches[0].clientY - e.touches[1].clientY;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    scale = Math.min(Math.max(scale * (distance / pinchStartDistance), 1), 5);
-                    pinchStartDistance = distance;
-                    updateTransform();
-                }
-            }, { passive: true });
-
-            modalImageContainer.addEventListener("touchend", () => {
-                isDragging = false;
-                pinchStartDistance = 0;
-            });
-
-            modalImageContainer.addEventListener("dblclick", () => {
-                scale = 1;
-                translateX = 0;
-                translateY = 0;
-                updateTransform();
-            });
+        if (gameId >= games.length || gameId < 0) {
+            document.getElementById("game-details-content").innerHTML = `
+                <div class="game-content">
+                    <p class="error-message">Game not found for ID: ${gameId}</p>
+                </div>
+            `;
+            return;
         }
 
-        function showModal(imageSrc) {
-            const modal = document.getElementById("image-modal");
-            const modalImage = document.getElementById("modal-image");
-            modalImage.src = imageSrc;
-            modalImage.alt = "Large game screenshot";
-            modal.style.display = "flex";
-            modalImage.style.transform = "scale(1) translate(0px, 0px)";
-        }
+        const game = games[gameId];
+        const math = generateMathQuestion();
+        // SEO: Update title with game name for specificity
+        document.title = `${game.title} - GameHub`;
+        // SEO: Update meta description dynamically
+        document.querySelector('meta[name="description"]').setAttribute('content', `${game.description.substring(0, 160)}`);
+        // SEO: Update Open Graph and Twitter Card dynamically
+        document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.title} - GameHub`);
+        document.querySelector('meta[property="og:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
+        document.querySelector('meta[property="og:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
+        document.querySelector('meta[property="og:url"]').setAttribute('content', `https://www.gamehub.com/game-details.html?id=${gameId}`);
+        document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.title} - GameHub`);
+        document.querySelector('meta[name="twitter:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
+        document.querySelector('meta[name="twitter:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
+        // SEO: Update canonical URL
+        document.querySelector('link[rel="canonical"]').setAttribute('href', `https://www.gamehub.com/game-details.html?id=${gameId}`);
 
-        function closeModal() {
-            document.getElementById("image-modal").style.display = "none";
-        }
+        const cleanDownload = game.download ? game.download.trim() : '#';
+        const thumbnailImage = await preloadImage(
+            game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
+            'https://via.placeholder.com/400x200?text=Game+Cover'
+        );
+        const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
+        const preloadedGalleryImages = await Promise.all(
+            galleryImages.map(img => preloadImage(img, 'https://via.placeholder.com/200x150?text=Game+Cover'))
+        );
+        let galleryHTML = preloadedGalleryImages.length > 0 ? `
+            <h2>Screenshots (${preloadedGalleryImages.length})</h2>
+            <div class="gallery">
+                ${preloadedGalleryImages.map((img, index) => `
+                    <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')" width="180" height="150">
+                `).join('')}
+            </div>
+        ` : '';
 
-        async function loadDetails() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get("id");
-            const page = params.get("page") || "1";
-            const query = params.get("query") || "";
-            const tag = params.get("tag") || "";
-            const from = params.get("from") || "index";
+        // SEO: Update schema markup dynamically
+        const schemaScript = document.createElement('script');
+        schemaScript.type = 'application/ld+json';
+        schemaScript.text = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoGame",
+            "name": game.title,
+            "description": game.description,
+            "thumbnailUrl": thumbnailImage,
+            "image": preloadedGalleryImages,
+            "author": {
+                "@type": "Organization",
+                "name": game.developer
+            },
+            "inLanguage": game.language,
+            "genre": game.tags,
+            "url": `https://www.gamehub.com/game-details.html?id=${gameId}`
+        });
+        document.head.appendChild(schemaScript);
 
-            const logoLink = document.getElementById("logo-link");
-            if (from === "search" && query) {
-                logoLink.href = `search.html?page=${page}&query=${encodeURIComponent(query)}`;
-            } else if (from === "tag-results" && tag) {
-                logoLink.href = `tag-results.html?page=${page}&tag=${encodeURIComponent(tag)}`;
+        document.getElementById("game-details-content").innerHTML = `
+            <div class="game-content">
+                <h1>${game.title}</h1>
+                <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} cover image" width="400" height="200" fetchpriority="high">
+                ${galleryHTML}
+                <p><b>Developer:</b> ${game.developer}</p>
+                <p><b>Version:</b> ${game.version}</p>
+                <p><b>Status:</b> ${game.status}</p>
+                <p><b>Language:</b> ${game.language}</p>
+                <p><b>Description:</b> ${game.description}</p>
+                <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
+                <div class="download-section">
+                    <div class="math-challenge">
+                        <label for="math-answer">${math.question}</label>
+                        <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
+                        <button id="verify-answer">Verify</button>
+                    </div>
+                    <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download ${game.title}</a>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("verify-answer").addEventListener("click", () => {
+            const userAnswer = parseInt(document.getElementById("math-answer").value);
+            const downloadLink = document.getElementById("download-link");
+            if (userAnswer === math.answer) {
+                downloadLink.classList.add("active");
+                downloadLink.setAttribute("aria-disabled", "false");
             } else {
-                logoLink.href = `index.html?page=${page}`;
+                alert("Incorrect answer. Please try again.");
+                document.getElementById("math-answer").value = "";
             }
+        });
 
-            if (id === null || isNaN(id) || id < 0) {
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <p class="error-message">Invalid game ID: ${id}</p>
-                    </div>
-                `;
-                return;
+        document.getElementById("math-answer").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("verify-answer").click();
             }
+        });
 
-            const gameId = parseInt(id, 10);
-            try {
-                const protoContent = `
-                    syntax = "proto3";
-                    package gamehub;
-                    message Game {
-                        string title = 1;
-                        string developer = 2;
-                        string version = 3;
-                        string status = 4;
-                        repeated string tags = 5;
-                        string description = 6;
-                        string download = 7;
-                        string language = 8;
-                        repeated string images = 9;
-                        string thumbnail = 10;
-                    }
-                    message GameList {
-                        repeated Game games = 1;
-                    }
-                `;
-                const root = await protobuf.parse(protoContent, { keepCase: true }).root;
-                const GameListMessage = root.lookupType("gamehub.GameList");
-                const response = await fetch('public/data/games.pb');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
-                }
-                const protoBinaryData = new Uint8Array(await response.arrayBuffer());
-                const message = GameListMessage.decode(protoBinaryData);
-                const games = message.games;
-
-                if (gameId >= games.length || gameId < 0) {
-                    document.getElementById("game-details-content").innerHTML = `
-                        <div class="game-content">
-                            <p class="error-message">Game not found for ID: ${gameId}</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const game = games[gameId];
-                // SEO: Update title with game name for specificity
-                document.title = `${game.title} - GameHub`;
-                // SEO: Update meta description dynamically
-                document.querySelector('meta[name="description"]').setAttribute('content', `${game.description.substring(0, 160)}`);
-                // SEO: Update Open Graph and Twitter Card dynamically
-                document.querySelector('meta[property="og:title"]').setAttribute('content', `${game.title} - GameHub`);
-                document.querySelector('meta[property="og:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
-                document.querySelector('meta[property="og:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
-                document.querySelector('meta[property="og:url"]').setAttribute('content', `https://www.gamehub.com/game-details.html?id=${gameId}`);
-                document.querySelector('meta[name="twitter:title"]').setAttribute('content', `${game.title} - GameHub`);
-                document.querySelector('meta[name="twitter:description"]').setAttribute('content', `${game.description.substring(0, 200)}`);
-                document.querySelector('meta[name="twitter:image"]').setAttribute('content', game.thumbnail || 'https://via.placeholder.com/400x200?text=Game+Cover');
-                // SEO: Update canonical URL
-                document.querySelector('link[rel="canonical"]').setAttribute('href', `https://www.gamehub.com/game-details.html?id=${gameId}`);
-
-                const cleanDownload = game.download ? game.download.trim() : '#';
-                const thumbnailImage = await preloadImage(
-                    game.thumbnail || (game.images && game.images[0]) || 'https://via.placeholder.com/400x200?text=Game+Cover',
-                    'https://via.placeholder.com/400x200?text=Game+Cover'
-                );
-                const galleryImages = game.images ? game.images.filter(img => img !== game.thumbnail) : [];
-                const preloadedGalleryImages = await Promise.all(
-                    galleryImages.map(img => preloadImage(img, 'https://via.placeholder.com/200x150?text=Game+Cover'))
-                );
-                let galleryHTML = preloadedGalleryImages.length > 0 ? `
-                    <h2>Screenshots (${preloadedGalleryImages.length})</h2>
-                    <div class="gallery">
-                        ${preloadedGalleryImages.map((img, index) => `
-                            <img src="${img}" alt="${game.title} screenshot ${index + 1}" loading="lazy" onclick="showModal('${img}')" width="180" height="150">
-                        `).join('')}
-                    </div>
-                ` : '';
-
-                // SEO: Update schema markup dynamically
-                const schemaScript = document.createElement('script');
-                schemaScript.type = 'application/ld+json';
-                schemaScript.text = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "VideoGame",
-                    "name": game.title,
-                    "description": game.description,
-                    "thumbnailUrl": thumbnailImage,
-                    "image": preloadedGalleryImages,
-                    "author": {
-                        "@type": "Organization",
-                        "name": game.developer
-                    },
-                    "inLanguage": game.language,
-                    "genre": game.tags,
-                    "url": `https://www.gamehub.com/game-details.html?id=${gameId}`
-                });
-                document.head.appendChild(schemaScript);
-
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <h1>${game.title}</h1>
-                        <img src="${thumbnailImage}" class="game-thumbnail" alt="${game.title} cover image" width="400" height="200" fetchpriority="high">
-                        ${galleryHTML}
-                        <p><b>Developer:</b> ${game.developer}</p>
-                        <p><b>Version:</b> ${game.version}</p>
-                        <p><b>Status:</b> ${game.status}</p>
-                        <p><b>Language:</b> ${game.language}</p>
-                        <p><b>Description:</b> ${game.description}</p>
-                        <p><b>Tags:</b> ${game.tags.map(tag => `<a href="tag-results.html?tag=${encodeURIComponent(tag)}" class="tag-button">${tag}</a>`).join(", ")}</p>
-                        <div class="download-section">
-                            <div class="math-challenge">
-                                <label for="math-answer">${generateMathQuestion().question}</label>
-                                <input type="number" id="math-answer" placeholder="Answer" aria-label="Math challenge answer">
-                                <button id="verify-answer">Verify</button>
-                            </div>
-                            <a href="${cleanDownload}" id="download-link" class="download-button" target="_blank" rel="noopener noreferrer" aria-disabled="true">Download ${game.title}</a>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById("verify-answer").addEventListener("click", () => {
-                    const userAnswer = parseInt(document.getElementById("math-answer").value);
-                    const downloadLink = document.getElementById("download-link");
-                    if (userAnswer === math.answer) {
-                        downloadLink.classList.add("active");
-                        downloadLink.setAttribute("aria-disabled", "false");
-                    } else {
-                        alert("Incorrect answer. Please try again.");
-                        document.getElementById("math-answer").value = "";
-                    }
-                });
-
-                document.getElementById("math-answer").addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        document.getElementById("verify-answer").click();
-                    }
-                });
-
-                document.getElementById("search-button").addEventListener("click", handleSearch);
-                document.getElementById("search-input").addEventListener("keydown", (e) => {
-                    if (e.key === "Enter") {
-                        handleSearch();
-                    }
-                });
-
-                document.getElementById("modal-close").addEventListener("click", closeModal);
-                document.getElementById("image-modal").addEventListener("click", (e) => {
-                    if (e.target === document.getElementById("image-modal")) {
-                        closeModal();
-                    }
-                });
-
-                initializeModalZoom();
-            } catch (error) {
-                document.getElementById("game-details-content").innerHTML = `
-                    <div class="game-content">
-                        <p class="error-message">Failed to load game details: ${error.message}</p>
-                    </div>
-                `;
+        document.getElementById("search-button").addEventListener("click", handleSearch);
+        document.getElementById("search-input").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleSearch();
             }
-        }
+        });
 
-        window.onload = loadDetails;
+        document.getElementById("modal-close").addEventListener("click", closeModal);
+        document.getElementById("image-modal").addEventListener("click", (e) => {
+            if (e.target === document.getElementById("image-modal")) {
+                closeModal();
+            }
+        });
+
+        initializeModalZoom();
+    } catch (error) {
+        document.getElementById("game-details-content").innerHTML = `
+            <div class="game-content">
+                <p class="error-message">Failed to load game details: ${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+window.onload = loadDetails;
     </script>
 </body>
 
 </html>
+
 

@@ -175,8 +175,106 @@
             height: auto;
             display: block;
             object-fit: cover;
-            aspect-ratio: 16 / 9;
-            loading: eager;
+            aspect-ratio: 16 / 8;
+        }
+
+        .recommend-container {
+            margin: 2rem clamp(2.5rem, 6vw, 3rem);
+            max-width: 1200px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .recommend-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--text-white);
+            border-bottom: 2px solid var(--solid-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .recommend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(300px, 40vw, 400px), 1fr));
+            gap: 20rem;
+        }
+
+        .recommend-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .recommend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            border-color: var(--secondary-color);
+        }
+
+        .recommend-image-box {
+            width: 100%;
+            aspect-ratio: 4 / 1;
+            overflow: hidden;
+        }
+
+        .recommend-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .recommend-details {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .recommend-game-name {
+            font-size: clamp(1.2rem, 2vw, 1.4rem);
+            font-weight: 700;
+            color: var(--text-white);
+        }
+
+        .recommend-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .recommend-download-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-white);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-align: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 10px var(--cloud-glow);
+            align-self: flex-start;
+        }
+
+        .recommend-download-btn:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+            box-shadow: 0 0 15px var(--cloud-glow);
         }
 
         .tags-link-container {
@@ -418,15 +516,21 @@
             0% {
                 opacity: 0.6;
             }
+
             50% {
                 opacity: 1;
             }
+
             100% {
                 opacity: 0.6;
             }
         }
 
         @media (max-width: 768px) {
+            .recommend-grid {
+                grid-template-columns: 1fr;
+            }
+
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
@@ -441,12 +545,17 @@
 
             .tags-link-container,
             .latest-games-container,
-            .links-container {
-                margin: 0 clamp(2rem, 5vw, 2.5rem);
+            .links-container,
+            .recommend-container {
+                margin: 2rem clamp(2rem, 5vw, 2.5rem);
             }
         }
 
         @media (max-width: 480px) {
+            .recommend-grid {
+                grid-template-columns: 1fr;
+            }
+
             .games-grid {
                 grid-template-columns: 1fr;
             }
@@ -461,8 +570,9 @@
 
             .tags-link-container,
             .latest-games-container,
-            .links-container {
-                margin: 0 clamp(1.5rem, 4vw, 2rem);
+            .links-container,
+            .recommend-container {
+                margin: 2rem clamp(1.5rem, 4vw, 2rem);
             }
 
             .top-bar {
@@ -497,15 +607,45 @@
     </header>
     <main>
         <section class="banner">
-            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                alt="Exciting gaming scene showcasing new releases" loading="eager"
-                srcset="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80 600w, 
-                         https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80 1200w"
-                sizes="(max-width: 600px) 600px, 1200px" fetchpriority="high">
+            <img src="images/banner.webp" alt="Exciting gaming scene showcasing new releases" loading="eager"
+                srcset="images/banner.webp 600w, images/banner.webp 1200w" sizes="(max-width: 600px) 600px, 1200px"
+                fetchpriority="high">
+        </section>
+
+
+        <section class="recommend-container" aria-labelledby="recommend-title">
+            <h2 class="recommend-title" id="recommend-title">Recommended</h2>
+            <div class="recommend-grid">
+                <article class="recommend-card">
+                    <div class="recommend-image-box">
+                        <img src="images/game-cover.webp" alt="Love Life Game Cover" loading="lazy">
+                    </div>
+                    <div class="recommend-details">
+                        <h3 class="recommend-game-name">Love Life</h3>
+                        <p class="recommend-description">
+                            Love Life ~ Choose Your Destiny is an adult game about choices, dating, and adventure.
+                            After dying in an accident, the protagonist is saved by a mysterious voice and sent back to
+                            the
+                            past with a second chance. He regrets the choices he made before and misses his mother,
+                            wishing
+                            he could apologize and make things right. Now he works to clear the family debt while
+                            entering a
+                            dungeon where he can fight monsters, grow stronger, and uncover the truth behind his savior.
+                            Along the way, he meets friends, rivals, and lovers—each choice shaping whether he remains
+                            mortal, rises to godhood, or transcends the illusions crafted by the Supreme One.
+                        </p>
+                        <button class="recommend-download-btn" onclick="location.href='https://lovelifegame.pages.dev'">
+                            Buy & Download
+                        </button>
+
+                    </div>
+                </article>
+            </div>
         </section>
         <section class="tags-link-container">
             <a href="tags.html" class="tags-link" aria-label="View all game tags">All Tags</a>
         </section>
+
         <section class="latest-games-container" aria-labelledby="latest-games">
             <h2 class="section-title" id="latest-games">Latest Updated Games</h2>
             <div class="games-grid" id="games-grid" role="grid" aria-labelledby="latest-games">

@@ -1,3 +1,4 @@
 /data/*.pb
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=31536000, must-revalidate
   Content-Type: application/octet-stream
+

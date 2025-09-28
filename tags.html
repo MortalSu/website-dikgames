@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dikgames - All Tags</title>
+    <meta name="description" content="Explore all game tags on Dikgames to find games by category.">
+    <meta name="keywords" content="games, gaming platform, video games, Dikgames, game tags">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Dikgames Team">
+    <meta property="og:title" content="Dikgames - All Tags">
+    <meta property="og:description" content="Browse all game tags to discover games by category on Dikgames.">
+    <meta property="og:image" content="https://dikgames.pages.dev/images/banner.webp">
+    <meta property="og:url" content="https://dikgames.pages.dev/tags">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dikgames - All Tags">
+    <meta name="twitter:description" content="Browse all game tags to discover games by category on Dikgames.">
+    <meta name="twitter:image" content="https://dikgames.pages.dev/images/banner.webp">
+    <link rel="canonical" href="https://dikgames.pages.dev/tags">
+    <link rel="preload" href="public/data/games.pb" as="fetch" type="application/vnd.google.protobuf"
+        fetchpriority="high" crossorigin="anonymous">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js" as="script"
+        crossorigin="anonymous">
+    <link rel="preload" href="public/fonts/AnonymousPro-Regular.woff2" as="font" type="font/woff2"
+        crossorigin="anonymous">
+    <link rel="preload" href="public/fonts/AnonymousPro-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <style>
+        :root {
+            --primary-color: rgba(64, 196, 255, 0.6);
+            --secondary-color: rgba(2, 136, 209, 0.8);
+            --solid-primary: #40c4ff;
+            --bg-dark: #000000;
+            --card-bg: #1a1a1a;
+            --border-color: rgba(255, 255, 255, 0.4);
+            --text-white: #ffffff;
+            --text-muted: #cccccc;
+            --cloud-glow: rgba(255, 255, 255, 0.2);
+            --error-color: #ff6b6b;
+            --transition: all 0.3s ease;
+        }
+
+        @font-face {
+            font-family: 'Anonymous Pro';
+            src: url('public/fonts/AnonymousPro-Regular.woff2') format('woff2'),
+                url('public/fonts/AnonymousPro-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Anonymous Pro';
+            src: url('public/fonts/AnonymousPro-Bold.woff2') format('woff2'),
+                url('public/fonts/AnonymousPro-Bold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Anonymous Pro', monospace, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            line-height: 1.6;
+            font-size: clamp(16px, 2vw, 18px);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--solid-primary);
+            outline-offset: 2px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 3vw, 1.75rem);
+            font-weight: 700;
+            color: var(--solid-primary);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .search-bar input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px 0 0 20px;
+            background-color: var(--card-bg);
+            color: var(--text-white);
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--solid-primary);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-bar button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0 20px 20px 0;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-bar button:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+        }
+
+        .search-bar svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-white);
+        }
+
+        main {
+            background-color: var(--bg-dark);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tags-container,
+        .links-container {
+            margin: 0 clamp(2.5rem, 6vw, 3rem);
+        }
+
+        .section-title {
+            padding: 2rem 0 1rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--text-white);
+            border-bottom: 2px solid var(--solid-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        .tag-button {
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: var(--text-white);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-transform: capitalize;
+            text-align: center;
+        }
+
+        .tag-button:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+        }
+
+        .links-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            padding-bottom: 2rem;
+        }
+
+        .link-button {
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .link-button:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--solid-primary);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+            padding: 2rem;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        footer {
+            background-color: var(--bg-dark);
+            padding: 2rem clamp(2rem, 5vw, 2.5rem);
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .footer-content p {
+            color: var(--text-white);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-white);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .social-links a:hover {
+            color: var(--solid-primary);
+        }
+
+        .social-links svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .skeleton {
+            background: var(--card-bg);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .tags-container,
+            .links-container {
+                margin: 0 clamp(2rem, 5vw, 2.5rem);
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .tags-container,
+            .links-container {
+                margin: 0 clamp(1.5rem, 4vw, 2rem);
+            }
+
+            .tag-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .link-button {
+                width: 100%;
+                padding: 0.75rem;
+            }
+
+            .social-links svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="top-bar" role="banner">
+        <a href="index.html" class="logo" id="logo-link" aria-label="Dikgames Home">Dikgames</a>
+        <div class="search-bar" role="search">
+            <input type="text" id="search-input" placeholder="Search games..." aria-label="Search for games">
+            <button id="search-button" aria-label="Search">
+                <svg viewBox="0 0 512 512" aria-hidden="true">
+                    <path
+                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+    <main>
+        <section class="tags-container" aria-labelledby="tags-section">
+            <h2 class="section-title" id="tags-section">All Tags</h2>
+            <div class="tags-grid" id="tags-grid">
+                <p class="loading">Loading tags...</p>
+            </div>
+        </section>
+        <section class="links-container" aria-labelledby="links-section">
+            <h2 class="section-title" id="links-section">Explore More</h2>
+            <div class="links-grid">
+                <a href="https://lovelifegame.pages.dev/" class="link-button" aria-label="LoveLifeGame">LoveLife
+                    Game</a>
+                <!-- <a href="/contact" class="link-button" aria-label="Contact us">Contact Us</a> -->
+            </div>
+        </section>
+        <footer>
+            <div class="footer-content">
+                <p>Dikgames &copy; 2025. Your ultimate platform for game updates and game downloads.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/eternal_meta/" aria-label="Follow Dikgames on Instagram">
+                        <svg viewBox="0 0 448 512" aria-hidden="true">
+                            <path
+                                d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.8 9.9 67.6 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </footer>
+        <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Dikgames",
+        "url": "https://dikgames.pages.dev",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://dikgames.pages.dev/search.html?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+        <script src="https://cdn.jsdelivr.net/npm/protobufjs@7.2.5/dist/protobuf.min.js"></script>
+        <script>
+            // Note: To run this file, use a local web server (e.g., 'npx http-server' or VS Code Live Server)
+            // due to CORS restrictions with fetch requests.
+            async function fetchTags() {
+                try {
+                    const protoContent = `
+                    syntax = "proto3";
+                    package Dikgames;
+                    message Game {
+                        string title = 1;
+                        string developer = 2;
+                        string version = 3;
+                        string status = 4;
+                        repeated string tags = 5;
+                        string description = 6;
+                        string download = 7;
+                        string language = 8;
+                        repeated string images = 9;
+                        string thumbnail = 10;
+                    }
+                    message GameList {
+                        repeated Game games = 1;
+                    }
+                `;
+
+                    const root = await protobuf.parse(protoContent, { keepCase: true }).root;
+                    const GameListMessage = root.lookupType("Dikgames.GameList");
+                    const response = await fetch('public/data/games.pb');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch games.pb: ${response.statusText}`);
+                    }
+                    const protoBinaryData = new Uint8Array(await response.arrayBuffer());
+                    const message = GameListMessage.decode(protoBinaryData);
+                    const games = message.games;
+
+                    const allTags = new Set();
+                    games.forEach(game => {
+                        if (game.tags && Array.isArray(game.tags)) {
+                            game.tags.forEach(tag => allTags.add(tag.toLowerCase()));
+                        }
+                    });
+                    const tags = Array.from(allTags).sort();
+                    renderTags(tags);
+
+                    // Update SEO metadata dynamically
+                    document.querySelector('meta[name="description"]').setAttribute('content', `Explore ${tags.length} game tags on Dikgames to find games by category.`);
+                    document.querySelector('meta[property="og:description"]').setAttribute('content', `Browse ${tags.length} game tags to discover games by category on Dikgames.`);
+                    document.querySelector('meta[name="twitter:description"]').setAttribute('content', `Browse ${tags.length} game tags to discover games by category on Dikgames.`);
+                } catch (error) {
+                    console.error("Error loading tags:", error);
+                    document.getElementById("tags-grid").innerHTML = `
+                    <p class="error-message">Failed to load tags: ${error.message}</p>`;
+                }
+            }
+
+            function renderTags(tags) {
+                const tagsGrid = document.getElementById("tags-grid");
+                tagsGrid.innerHTML = "";
+                if (tags.length === 0) {
+                    tagsGrid.innerHTML = `<p class="error-message">No tags found.</p>`;
+                    return;
+                }
+                tags.forEach(tag => {
+                    const tagButton = document.createElement("a");
+                    tagButton.className = "tag-button";
+                    tagButton.href = `tag-results.html?tag=${encodeURIComponent(tag)}`;
+                    tagButton.textContent = tag;
+                    tagButton.setAttribute("aria-label", `View games with ${tag} tag`);
+                    tagsGrid.appendChild(tagButton);
+                });
+            }
+
+            function handleSearch() {
+                const query = document.getElementById("search-input").value.trim();
+                if (query) {
+                    window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+                }
+            }
+
+            document.getElementById("search-button").addEventListener("click", handleSearch);
+            document.getElementById("search-input").addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    handleSearch();
+                }
+            });
+
+            window.onload = fetchTags;
+        </script>
+</body>
+
+</html>
